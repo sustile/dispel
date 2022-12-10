@@ -1,0 +1,53 @@
+.Servers_Sidebar {
+  background-color: #333;
+  // position: fixed;
+  // left: 2rem;
+  // top: 50%;
+  // transform: translateY(-50%);
+  border-radius: 1rem;
+
+  h2 {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-red);
+    font-weight: 400;
+    letter-spacing: 0.2rem;
+  }
+
+  &_MainCont {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding: 1rem 2.5rem;
+    width: 11rem;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 10rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10rem;
+      background: var(--primary-red);
+    }
+
+    &_Server {
+      margin-top: 2rem;
+      cursor: pointer;
+      img {
+        width: 6rem;
+        height: 6rem;
+        object-fit: cover;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+.Nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  height: 8vh;
+
+  &_Left {
+    display: flex;
+    gap: 4rem;
+    max-width: 50%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3rem;
+
+    .userDetails {
+      display: flex;
+      gap: 2rem;
+      background-color: rgb(26, 26, 26);
+      padding: 0.5rem 2rem;
+      border-radius: 5px;
+      z-index: 50;
+      img {
+        width: 5rem;
+        height: 5rem;
+        object-fit: cover;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      &_Details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: flex-start;
+
+        span {
+          font-size: 1.5rem;
+          color: var(--primary-green-accent);
+        }
+
+        p {
+          font-weight: 600;
+          font-size: 1.2rem;
+          color: #ddd;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  &_Right {
+    padding-right: 10rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.2rem;
+    &_Header-Dispel {
+      color: var(--primary-red);
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 2rem;
+    }
+    p {
+      color: #ddd;
+      font-size: 1rem;
+    }
+  }
+}

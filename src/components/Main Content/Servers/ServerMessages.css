@@ -1,0 +1,185 @@
+.ServerMessages_MainCont {
+  width: 100%;
+  height: 92vh;
+  overflow-y: hidden;
+  position: relative;
+  display: flex;
+}
+.ServerMessages_MainCont .ServerMessages_ChannelsCont {
+  width: 40rem;
+  height: 100%;
+  background-color: var(--secondary-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.ServerMessages_MainCont .ServerMessages_ChannelsCont-ChannelType {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  max-height: 40%;
+}
+.ServerMessages_MainCont .ServerMessages_ChannelsCont-ChannelType h2 {
+  color: var(--primary-red);
+  font-weight: 400;
+  font-size: 1.9rem;
+  padding: 0.5rem 3rem;
+  border-radius: 5px;
+}
+.ServerMessages_MainCont .ServerMessages_ChannelsCont-Wrapper {
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+.ServerMessages_MainCont .ServerMessages_ChannelsCont-Wrapper .ServerMessages_ChannelsCont-Channel {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #333;
+  padding: 0.5rem 2rem;
+  border-radius: 1rem;
+  max-width: 100%;
+  cursor: pointer;
+}
+.ServerMessages_MainCont .ServerMessages_ChannelsCont-Wrapper .ServerMessages_ChannelsCont-Channel i {
+  color: var(--primary-green-accent);
+  font-size: 3rem;
+}
+.ServerMessages_MainCont .ServerMessages_ChannelsCont-Wrapper .ServerMessages_ChannelsCont-Channel p {
+  font-size: 1.5rem;
+  color: #ddd;
+  font-weight: 500;
+  width: 20rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServerMessages_MainHeader {
+  background-color: var(--primary-green-accent);
+  display: flex;
+  padding: 0.8rem 3rem;
+  justify-content: space-between;
+  align-items: center;
+  height: 6%;
+  width: 100%;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServerMessages_MainHeader_User {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServerMessages_MainHeader_User h2 {
+  font-size: 2.3rem;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServerMessages_MainHeader_User h2:hover {
+  text-decoration: underline;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServerMessages_MainHeader_User p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary-red);
+  transform: translateY(0.2rem);
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody {
+  width: 100%;
+  height: 94%;
+  position: relative;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages_MessagesCont {
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages_MessagesCont .ServerMessagesBody-Message {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages_MessagesCont .ServerMessagesBody-Message_Details {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages_MessagesCont .ServerMessagesBody-Message_Details img {
+  width: 4rem;
+  height: 4rem;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages_MessagesCont .ServerMessagesBody-Message_Details h2 {
+  color: var(--primary-red);
+  font-weight: 400;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages_MessagesCont .ServerMessagesBody-Message_Details h2:hover {
+  text-decoration: underline;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages_MessagesCont .ServerMessagesBody-Message_Body p {
+  color: #ddd;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-left: 5.2rem;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages-InputWrapper {
+  height: 8rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-image: linear-gradient(to bottom, transparent 20%, var(--primary-bg));
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages-InputWrapper form input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  border: 0;
+  outline: 0;
+  padding: 1.2rem 3rem;
+  border-radius: 2rem;
+  background-color: #333;
+  color: #ddd;
+  font-weight: 600;
+  font-family: "Roboto Mono", monospace;
+  font-size: 1.6rem;
+  transition: all 0.2s ease-in-out;
+}
+.ServerMessages_MainCont .ServersMessages_MessageWrapper .ServersMessages_MessageBody .ServerMessages-InputWrapper form input:focus {
+  box-shadow: 0 0 0 0.2rem var(--primary-red);
+}

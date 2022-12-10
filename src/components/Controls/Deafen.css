@@ -1,0 +1,13 @@
+.deafenToggle {
+  color: #ddd;
+  font-size: 2rem;
+  padding: 1.1rem;
+  border-radius: 50%;
+  background-color: #333;
+  cursor: pointer;
+}
+
+.ph-speaker-simple-slash-bold {
+  transition: color 0.3s ease;
+  color: var(--primary-red);
+}

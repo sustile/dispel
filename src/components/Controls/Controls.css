@@ -1,0 +1,16 @@
+.ControlsMainCont {
+  display: flex;
+  gap: 2rem;
+  z-index: 50;
+  justify-content: center;
+  align-items: center;
+}
+.ControlsMainCont .MediaControlsCont {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-green-accent);
+  padding: 0.8rem;
+  border-radius: 10rem;
+}

@@ -1,0 +1,165 @@
+import React, { useEffect, useMemo } from "react";
+import { dmMessagesAction } from "./../Store/store";
+import { useSelector, useDispatch } from "react-redux";
+
+import { currentCallStatusAction } from "./../Store/store";
+import { useState } from "react";
+import { useRef } from "react";
+
+function GlobalEventHandlers(props) {
+  let socket = props.socket;
+  let dispatch = useDispatch();
+  let [vcPeer, setVcPeer] = useState(props.vcPeer);
+  let [VOICESTREAM, setVoiceStream] = useState(props.VOICESTREAM);
+  let currentMainCont = useSelector((state) => state.currentMainCont);
+  let USERDATA = useSelector((state) => state.USERDATA);
+  let currentCallStatus = useSelector((state) => state.currentCallStatus);
+
+  let currentMainContRef = useRef();
+  let VOICESTREAMref = useRef();
+  let currentCallStatusRef = useRef();
+  let USERDATAref = useRef();
+
+  let call = currentCallStatus.callObj;
+
+  useEffect(() => {
+    currentMainContRef.current = currentMainCont;
+    currentCallStatusRef.current = currentCallStatus;
+    VOICESTREAMref.current = VOICESTREAM;
+    USERDATAref.current = USERDATA;
+  }, [currentCallStatus, VOICESTREAM, currentMainCont, USERDATA]);
+
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: false,
+        audio: {
+          noiseSuppression: true,
+          echoCancellation: true,
+        },
+      })
+      .then((stream) => {
+        setVoiceStream(stream);
+      });
+  }, []);
+
+  useEffect(() => {
+    vcPeer.on("call", (incoming) => {
+      incoming.answer(VOICESTREAMref.current);
+
+      call = incoming;
+      call.on("stream", (userVideoStream) => {
+        if (currentCallStatusRef.current.status) {
+        } else {
+          // console.log("My Stream : ", VOICESTREAM);
+          // console.log("User Stream : ", userVideoStream);
+          dispatch(
+            currentCallStatusAction.loadObj({
+              status: true,
+              callObj: call,
+              currentCallCont: currentMainContRef.current.id,
+              callList: [
+                {
+                  id: USERDATA.id,
+                  stream: VOICESTREAMref.current,
+                },
+                { id: "test", stream: userVideoStream },
+              ],
+            })
+          );
+
+          socket.emit("getCallData", currentMainContRef.current.id);
+        }
+      });
+    });
+
+    socket.on("joined-call", (data) => {
+      if (data.room === currentMainContRef.current.id) {
+        call = vcPeer.call(data.id, VOICESTREAMref.current);
+
+        dispatch(
+          currentCallStatusAction.loadObj({
+            status: false,
+            callObj: null,
+            currentCallCont: data.room,
+            callList: [],
+          })
+        );
+
+        call.on("stream", (userVideoStream) => {
+          if (currentCallStatusRef.current.status) {
+          } else {
+            dispatch(
+              currentCallStatusAction.loadObj({
+                status: true,
+                callObj: call,
+                currentCallCont: currentMainContRef.current.id,
+                callList: [
+                  {
+                    id: USERDATA.id,
+                    stream: VOICESTREAMref.current,
+                  },
+                  {
+                    id: data.id,
+                    name: data.name,
+                    image: data.image,
+                    stream: userVideoStream,
+                  },
+                ],
+              })
+            );
+          }
+        });
+      }
+    });
+
+    socket.on("receive-message_dm", (data) => {
+      dispatch(
+        dmMessagesAction.addMessage({
+          objId: data.objId,
+          dmId: data.room,
+          message: data.message,
+          from: data.from,
+          name: data.name,
+          image: data.image,
+          createdAt: data.createdAt,
+        })
+      );
+    });
+
+    socket.on("getCallData", (room) => {
+      if (currentCallStatusRef.current.currentCallCont === room) {
+        socket.emit("receiveCallData", {
+          room,
+          name: USERDATAref.current.name,
+          id: USERDATAref.current.id,
+          image: USERDATAref.current.image,
+        });
+      }
+    });
+
+    socket.on("receiveCallData", (data) => {
+      dispatch(
+        currentCallStatusAction.updateUser({
+          id: data.id,
+          name: data.name,
+          image: data.image,
+        })
+      );
+    });
+
+    socket.on("end-call", (room) => {
+      if (currentCallStatusRef.current.currentCallCont === room) {
+        if (currentCallStatusRef.current.callObj) {
+          currentCallStatusRef.current.callObj.close();
+        }
+
+        dispatch(currentCallStatusAction.closeCall());
+      }
+    });
+  }, []);
+
+  return <div className="GlobalEventHandlers"></div>;
+}
+
+export default GlobalEventHandlers;

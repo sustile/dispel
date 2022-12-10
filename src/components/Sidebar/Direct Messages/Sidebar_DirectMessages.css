@@ -1,0 +1,58 @@
+.DirectMessages_Sidebar_Main {
+  background-color: #333;
+  width: 30rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  max-height: 70vh;
+  transition: all 0.3s ease;
+  z-index: 50;
+  overflow-y: auto;
+}
+.DirectMessages_Sidebar_Main h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--primary-red);
+  font-weight: 400;
+  letter-spacing: 0.2rem;
+}
+.DirectMessages_Sidebar_Main::-webkit-scrollbar {
+  width: 5px;
+}
+.DirectMessages_Sidebar_Main::-webkit-scrollbar-track {
+  border-radius: 10rem;
+}
+.DirectMessages_Sidebar_Main::-webkit-scrollbar-thumb {
+  border-radius: 10rem;
+  background: var(--primary-red);
+}
+.DirectMessages_Sidebar_Main_DM {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  border-radius: 1rem;
+  padding: 0.5rem 2rem;
+  cursor: pointer;
+}
+.DirectMessages_Sidebar_Main_DM img {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.DirectMessages_Sidebar_Main_DM p {
+  font-family: "Roboto Mono", monospace;
+  color: #ddd;
+  font-size: 1.7rem;
+  font-weight: 600;
+  width: calc(100% - 8rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

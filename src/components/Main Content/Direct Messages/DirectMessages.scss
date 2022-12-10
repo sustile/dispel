@@ -1,0 +1,171 @@
+.DirectMessages-Wrapper {
+  width: 100%;
+  height: 92vh;
+  overflow-y: hidden;
+  // background-color: red;
+  position: relative;
+
+  .DirectMessagesHeader {
+    background-color: var(--primary-green-accent);
+    display: flex;
+    padding: 0.8rem 3rem;
+    justify-content: space-between;
+    align-items: center;
+    height: 6%;
+
+    &_User {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: center;
+      h2 {
+        font-size: 2.3rem;
+        color: #333;
+        font-weight: 500;
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      p {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary-red);
+        transform: translateY(0.2rem);
+      }
+    }
+    .DirectMessagesCallToggle {
+      // border-radius: 50%;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-right: 2rem;
+      border: 0;
+      outline: 0;
+      background-color: #333;
+
+      i {
+        color: #b6ccfe;
+        padding: 0.7rem;
+        font-size: 2.5rem;
+      }
+
+      &:disabled,
+      &:active:disabled,
+      &:hover:disabled {
+        background-color: rgb(34, 34, 34);
+        i {
+          color: rgb(121, 121, 121);
+        }
+      }
+    }
+  }
+
+  .DirectMessagesBody-MessageWrapper {
+    width: 100%;
+    height: 95%;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.5rem;
+    overflow-y: auto;
+    padding-bottom: 10rem;
+
+    .DirectMessagesBody-Message {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      width: 100%;
+
+      &_Details {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+
+        img {
+          width: 4rem;
+          height: 4rem;
+          object-fit: cover;
+          border-radius: 50%;
+          overflow: hidden;
+          cursor: pointer;
+        }
+        h2 {
+          color: var(--primary-red);
+          font-weight: 400;
+          font-size: 1.8rem;
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        span {
+          color: #ddd;
+          font-size: 1.2rem;
+          font-weight: 500;
+          margin-left: 2rem;
+        }
+
+        //p {
+        //  span{
+        //    color: #ddd;
+        //    padding: 0 .5rem;
+        //    font-size: 2rem;
+        //  }
+        //  color: var(--primary-blue);
+        //  font-size: 1.3rem;
+        //  transform: translateY(0.1rem);
+        //}
+      }
+
+      &_Body {
+        p {
+          color: #ddd;
+          font-size: 1.3rem;
+          font-weight: 500;
+          margin-left: 5.2rem;
+        }
+      }
+    }
+  }
+
+  .DirectMessages-InputWrapper {
+    height: 8rem;
+    position: absolute;
+    // bottom: 1.1rem;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-image: linear-gradient(
+      to bottom,
+      transparent 20%,
+      var(--primary-bg)
+    );
+    form {
+      input {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 95%;
+        border: 0;
+        outline: 0;
+        padding: 1.2rem 3rem;
+        border-radius: 2rem;
+        background-color: #333;
+        color: #ddd;
+        font-weight: 600;
+        font-family: "Roboto Mono", monospace;
+        font-size: 1.6rem;
+        transition: all 0.2s ease-in-out;
+        &:focus {
+          box-shadow: 0 0 0 0.2rem var(--primary-red);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+.CallPopup {
+  .Modal {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+  }
+
+  .PopupCont {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    // transform: translate(-50%, -50%);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    background-color: rgb(20, 20, 20);
+    padding: 2rem 3rem;
+    border-radius: 2rem;
+
+    h2 {
+      font-size: 2rem;
+      color: var(--primary-red);
+    }
+
+    .call_details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      img {
+        width: 6rem;
+        height: 6rem;
+        object-fit: cover;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      span {
+        font-family: "Roboto Mono", monospace;
+        font-size: 1.8rem;
+        font-weight: 400;
+        color: var(--primary-red);
+        width: 15rem;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .callControls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4rem;
+      .callAttend {
+        border-radius: 2rem;
+        cursor: pointer;
+        border: 0;
+        outline: 0;
+        background-color: #333;
+
+        i {
+          color: var(--primary-green-accent);
+          padding: 0.7rem;
+          font-size: 4rem;
+        }
+      }
+
+      .callReject {
+        border-radius: 2rem;
+        cursor: pointer;
+        border: 0;
+        outline: 0;
+        background-color: #333;
+
+        i {
+          color: var(--secondary-red);
+          padding: 0.7rem;
+          font-size: 4rem;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.Sidebar {
+  z-index: 50;
+}
+.Sidebar_ToggleBtn {
+  background-color: #333;
+  font-size: 3rem;
+  color: var(--primary-red);
+  padding: 1rem;
+  border-radius: 50%;
+  z-index: 50;
+  cursor: pointer;
+}
+.Sidebar_ToggleBtn:hover {
+  border-radius: 2rem;
+}
+.Sidebar_CloseBtn {
+  background-color: #333;
+  font-size: 3rem;
+  color: var(--primary-red);
+  padding: 1rem;
+  border-radius: 50%;
+  position: fixed;
+  top: 1.1rem;
+  left: 3rem;
+  z-index: 80;
+  cursor: pointer;
+}
+.Sidebar_CloseBtn:hover {
+  border-radius: 2rem;
+}
+@keyframes popUp {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
