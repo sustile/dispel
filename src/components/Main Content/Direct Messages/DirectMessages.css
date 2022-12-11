@@ -63,6 +63,56 @@
   gap: 0.5rem;
   overflow-y: auto;
   padding-bottom: 10rem;
+  position: relative;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .NoMessages {
+  color: #ddd;
+  font-size: 3rem;
+  font-weight: 400;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  line-height: 2;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .NoMessages span {
+  color: var(--primary-red);
+  font-weight: 500;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 30;
+  background-color: #333;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  width: auto;
+  height: auto;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu .ContextMenuOption {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  width: 100%;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu .ContextMenuOption i {
+  color: var(--primary-green-accent);
+  font-size: 2.5rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu .ContextMenuOption span {
+  color: #ddd;
+  font-size: 1.8rem;
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message {
   display: flex;
@@ -70,6 +120,40 @@
   padding: 1rem 2rem;
   border-radius: 0.5rem;
   width: 100%;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_MessageContextMenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 30;
+  background-color: #333;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: auto;
+  height: auto;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_MessageContextMenu .ContextMenuOption {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  width: 100%;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_MessageContextMenu .ContextMenuOption i {
+  color: var(--primary-green-accent);
+  font-size: 2.5rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_MessageContextMenu .ContextMenuOption span {
+  color: #ddd;
+  font-size: 1.8rem;
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Details {
   display: flex;
@@ -105,6 +189,51 @@
   font-size: 1.3rem;
   font-weight: 500;
   margin-left: 5.2rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .MessageEditForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .MessageEditForm .editMessageInput {
+  background-color: #333;
+  outline: 0;
+  border: 0;
+  width: 100%;
+  padding: 1rem 3rem;
+  margin: 1rem;
+  border-radius: 1rem;
+  border: 5px solid rgb(24, 24, 24);
+  font-family: "Roboto Mono", monospace;
+  color: #ddd;
+  font-weight: 500;
+  font-size: 1.6rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .MessageEditForm .BtnsCont {
+  align-self: flex-start;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .MessageEditForm .BtnsCont button {
+  border: 0;
+  outline: 0;
+  background-color: var(--primary-green-accent);
+  padding: 0.8rem 2rem;
+  border-radius: 5px;
+  font-family: "Roboto Mono", monospace;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .MessageEditForm .BtnsCont .EditCancel {
+  background-color: var(--secondary-red);
+  color: #ddd;
 }
 .DirectMessages-Wrapper .DirectMessages-InputWrapper {
   height: 8rem;

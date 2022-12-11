@@ -8,6 +8,9 @@ function Audio(props) {
     audioRef.current.srcObject = props.stream;
     audioRef.current.addEventListener("loadedmetadata", () => {
       audioRef.current.play();
+      if (props.deafen) {
+        audioRef.current.pause();
+      }
     });
   });
   return <video ref={audioRef} style={{ display: "none" }}></video>;

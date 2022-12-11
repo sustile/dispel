@@ -18,6 +18,8 @@ import {
 import { useState } from "react";
 import GlobalEventHandlers from "../../Main Content/GlobalEventHandlers";
 import CallPopup from "../../Call Popup/CallPopup";
+import Friends from "../../Main Content/Friends/Friends";
+import { ContextMenuActions } from "./../../Store/store";
 
 function Main(props) {
   const dispatch = useDispatch();
@@ -33,21 +35,9 @@ function Main(props) {
 
   useEffect(() => {
     (async () => {
-      // let lol = await axios.post(`${CONSTANTS.ip}/api/addNewDm`, {
-      //   person2: "638ca9b3149d344882dd6f68",
-      // });
-
-      // navigator.mediaDevices
-      //   .getUserMedia({
-      //     video: false,
-      //     audio: {
-      //       noiseSuppression: true,
-      //       echoCancellation: true,
-      //     },
-      //   })
-      //   .then((stream) => {
-      //     SETVOICESTREAM(stream);
-      //   });
+      document.addEventListener("click", () => {
+        dispatch(ContextMenuActions.loadMenu(""));
+      });
 
       let data = await axios.get(`${CONSTANTS.ip}/api/getBasicData`);
       if (data.data.status === "ok") {
@@ -107,7 +97,11 @@ function Main(props) {
       ) : (
         ""
       )}
-      <Home />
+      {currentMainCont.value === "friendsCont" ? (
+        <Friends socket={socket} />
+      ) : (
+        ""
+      )}
       {vcPeer && (
         <GlobalEventHandlers
           socket={socket}

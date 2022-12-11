@@ -20,6 +20,7 @@
   padding: 0.5rem 2rem;
   border-radius: 5px;
   z-index: 50;
+  margin-left: 4rem;
 }
 .Nav_Left .userDetails img {
   width: 5rem;

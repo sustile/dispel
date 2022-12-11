@@ -1,0 +1,242 @@
+.Friends-Wrapper {
+  width: 100%;
+  height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Friends-Wrapper .Friends-type-Selector {
+  width: 100%;
+  height: 8%;
+  display: flex;
+  flex-direction: row;
+  gap: 10rem;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(27, 27, 27);
+}
+.Friends-Wrapper .Friends-type-Selector button {
+  border: 0;
+  outline: 0;
+  padding: 0.8rem 2rem;
+  border-radius: 1rem;
+  background-color: #333;
+  font-family: "Roboto Mono", monospace;
+  font-size: 1.9rem;
+  color: var(--primary-red);
+  font-weight: 500;
+  cursor: pointer;
+}
+.Friends-Wrapper .Friends-type-Selector .active {
+  color: #333;
+  background-color: var(--primary-green-accent) !important;
+}
+.Friends-Wrapper .Friends-type-Selector .AddFriendsBtn {
+  background-color: var(--primary-green);
+  color: #333;
+}
+.Friends-Wrapper .Friends-MasterCont {
+  width: 100%;
+  height: 92%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Friends-Wrapper .Friends-MasterCont .Friends-topBar {
+  background-color: rgb(34, 34, 34);
+  padding: 1.2rem 3rem;
+  width: 100%;
+}
+.Friends-Wrapper .Friends-MasterCont .Friends-topBar h2 {
+  font-size: 2rem;
+  color: var(--primary-green-accent);
+  letter-spacing: 0.2rem;
+  margin-left: 2rem;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(22, 22, 22);
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont .NoData {
+  color: #ddd;
+  font-size: 2.5rem;
+  font-weight: 400;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 2;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont .NoData span {
+  color: var(--primary-green-accent);
+  font-weight: 500;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-friend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 3rem;
+  gap: 3rem;
+  border-radius: 1rem;
+  width: 100%;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-friend .detailsCont {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3rem;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-friend .detailsCont img {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-friend .detailsCont .userDetails {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.3rem;
+  flex-direction: column;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-friend .detailsCont .userDetails span {
+  color: var(--primary-red);
+  font-size: 1.6rem;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-friend .detailsCont .userDetails p {
+  color: #ddd;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-friend i {
+  color: #ddd;
+  font-size: 2.2rem;
+  padding: 1.1rem;
+  border-radius: 50%;
+  background-color: #333;
+  cursor: pointer;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 15rem;
+  gap: 3rem;
+  border-radius: 1rem;
+  width: 100%;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .RequestType {
+  color: #ddd;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .Request {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8rem;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .Request .RequestDetails {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3rem;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .Request .RequestDetails img {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .Request .RequestDetails .userDetails {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.3rem;
+  flex-direction: column;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .Request .RequestDetails .userDetails span {
+  color: var(--primary-red);
+  font-size: 1.6rem;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .Request .RequestDetails .userDetails p {
+  color: #ddd;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.Friends-Wrapper .Friends-MasterCont_RenderCont-pending .Request i {
+  color: #ddd;
+  font-size: 2rem;
+  padding: 1.1rem;
+  border-radius: 50%;
+  background-color: #333;
+  cursor: pointer;
+  margin: 0 2rem;
+}
+.Friends-Wrapper .Friends-MasterCont_AddFriends {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(22, 22, 22);
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+.Friends-Wrapper .Friends-MasterCont_AddFriends form {
+  margin: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+}
+.Friends-Wrapper .Friends-MasterCont_AddFriends form button {
+  outline: 0;
+  border: 0;
+  background-color: #333;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+.Friends-Wrapper .Friends-MasterCont_AddFriends form button i {
+  color: var(--primary-green);
+  font-size: 3rem;
+  padding: 1.5rem;
+}
+.Friends-Wrapper .Friends-MasterCont_AddFriends form label {
+  color: var(--primary-green-accent);
+  font-size: 2rem;
+  font-weight: 500;
+}
+.Friends-Wrapper .Friends-MasterCont_AddFriends form input {
+  outline: 0;
+  border: 0;
+  background-color: #333;
+  color: #ddd;
+  font-family: "Roboto Mono", monospace;
+  font-size: 2rem;
+  padding: 1rem 3rem;
+  border-radius: 1rem;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+}
+.Friends-Wrapper .Friends-MasterCont_AddFriends form input::placeholder {
+  color: #ddd;
+}

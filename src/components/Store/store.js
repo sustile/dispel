@@ -91,7 +91,7 @@ const allServers = createSlice({
 const currentMainCont = createSlice({
   name: "currentMainCont",
   initialState: {
-    value: "",
+    value: "friendsCont",
     id: "",
     name: "",
   },
@@ -220,6 +220,32 @@ const allDmMessages = createSlice({
         }
       }
     },
+
+    updateMessage(state, action) {
+      let check = state.filter((el) => el.dmId === action.payload.dmId);
+      if (check.length > 0) {
+        check = check[0];
+      } else {
+        check = undefined;
+      }
+      if (check) {
+        let newMessages = check.messages.map((el) => {
+          if (el.objId === action.payload.objId) {
+            return action.payload;
+          } else {
+            return el;
+          }
+        });
+
+        return state.map((el) => {
+          if (el.dmId === action.payload.dmId) {
+            return { ...el, messages: newMessages };
+          } else {
+            return el;
+          }
+        });
+      }
+    },
   },
 });
 
@@ -300,6 +326,21 @@ const currentCallStatus = createSlice({
   },
 });
 
+const ContextMenu = createSlice({
+  name: "contextMenu",
+  initialState: {
+    id: "",
+  },
+
+  reducers: {
+    loadMenu(state, action) {
+      return {
+        id: action.payload,
+      };
+    },
+  },
+});
+
 const store = configureStore({
   reducer: {
     controls: controlsOptions.reducer,
@@ -310,6 +351,7 @@ const store = configureStore({
     CONSTANTS: CONSTANTS.reducer,
     allDmMessages: allDmMessages.reducer,
     currentCallStatus: currentCallStatus.reducer,
+    contextMenu: ContextMenu.reducer,
   },
 });
 
@@ -321,5 +363,6 @@ export const CurrentMainContActions = currentMainCont.actions;
 export const ConstantsActions = CONSTANTS.actions;
 export const dmMessagesAction = allDmMessages.actions;
 export const currentCallStatusAction = currentCallStatus.actions;
+export const ContextMenuActions = ContextMenu.actions;
 
 export default store;

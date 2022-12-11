@@ -8,12 +8,15 @@ import DirectMessages_Message from "./DirectMessages_Message";
 import { dmMessagesAction } from "./../../Store/store";
 import { useEffect } from "react";
 import axios from "axios";
+import DirectMessages_MessageMenu from "../../ContextMenus/DirectMessages_MessageMenu";
 
 function DirectMessages(props) {
   let socket = props.socket;
   let vcPeer = props.vcPeer;
   let inputRef = useRef();
   let messageCont = useRef();
+
+  let [showContextMenu, setShowContextMenu] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -145,6 +148,10 @@ function DirectMessages(props) {
     })();
   }, [currentCont.id]);
 
+  function setContextMenu(e) {
+    setShowContextMenu(e);
+  }
+
   useEffect(() => {
     let x = allDmMessages.filter((el) => el.dmId === currentCont.id);
     if (x.length > 0) {
@@ -155,7 +162,12 @@ function DirectMessages(props) {
     if (x) {
       setToBeRendered(
         x.messages.map((el) => (
-          <DirectMessages_Message key={el._id} data={el} />
+          <DirectMessages_Message
+            key={el.objId}
+            data={el}
+            showContextMenu={showContextMenu}
+            setShowContextMenu={setContextMenu}
+          />
         ))
       );
 
@@ -240,6 +252,13 @@ function DirectMessages(props) {
         onScroll={scrollHandler}
       >
         {toBeRendered}
+
+        {toBeRendered.length === 0 && (
+          <h2 className="NoMessages">
+            Start Chatting with <span>{props.data.name}</span> <br /> to see
+            your messages Appear here
+          </h2>
+        )}
       </div>
       <div className="DirectMessages-InputWrapper">
         <form onSubmit={inputHandler}>
@@ -252,6 +271,8 @@ function DirectMessages(props) {
           />
         </form>
       </div>
+
+      {/* <DirectMessages_MessageMenu /> */}
     </div>
   );
 }

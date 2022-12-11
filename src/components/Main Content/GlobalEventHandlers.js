@@ -14,6 +14,7 @@ function GlobalEventHandlers(props) {
   let currentMainCont = useSelector((state) => state.currentMainCont);
   let USERDATA = useSelector((state) => state.USERDATA);
   let currentCallStatus = useSelector((state) => state.currentCallStatus);
+  let controlsOptions = useSelector((state) => state.controls);
 
   let currentMainContRef = useRef();
   let VOICESTREAMref = useRef();
@@ -28,6 +29,12 @@ function GlobalEventHandlers(props) {
     VOICESTREAMref.current = VOICESTREAM;
     USERDATAref.current = USERDATA;
   }, [currentCallStatus, VOICESTREAM, currentMainCont, USERDATA]);
+
+  useEffect(() => {
+    if (!VOICESTREAMref.current) return;
+    let audio = VOICESTREAMref.current.getAudioTracks()[0];
+    audio.enabled = !controlsOptions.mute;
+  }, [controlsOptions.mute]);
 
   useEffect(() => {
     navigator.mediaDevices
