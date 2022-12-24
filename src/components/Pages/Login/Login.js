@@ -69,17 +69,23 @@ function Register() {
 
   return (
     <div className="Register-wrapper">
+      <div className="logoCont">
+        <h2 className="logo">Dispel</h2>
+        <span>
+          Developed By <p>Systile</p>
+        </span>
+      </div>
       <motion.h2
-        animate={{
-          translateY: [0, -80, 0],
-          transition: {
-            duration: 8,
-            repeat: Infinity,
-            type: "spring",
-          },
-        }}
+      // animate={{
+      //   translateY: [0, -80, 0],
+      //   transition: {
+      //     duration: 8,
+      //     repeat: Infinity,
+      //     type: "spring",
+      //   },
+      // }}
       >
-        DISPEL
+        LOGIN
       </motion.h2>
       <form className="Register-form" onSubmit={formHandler}>
         <motion.input
@@ -146,6 +152,25 @@ function Register() {
           Login
         </motion.button>
       </form>
+      <div className="RegisterContBtn">
+        <span>Don't have an Account?</span>
+        <motion.button
+          whileHover={{
+            backgroundColor: "var(--primary-green-accent)",
+            color: "#333",
+            scale: 1.1,
+            border: "2px solid transparent",
+            transition: {
+              duration: 0.3,
+              type: "spring",
+            },
+          }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => (window.location.href = "/register")}
+        >
+          Register Here
+        </motion.button>
+      </div>
     </div>
   );
 }

@@ -24,6 +24,7 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, "A Convo must have a Message"],
     },
+    ext: String,
   },
   { timestamps: true }
 );

@@ -20,6 +20,7 @@ import GlobalEventHandlers from "../../Main Content/GlobalEventHandlers";
 import CallPopup from "../../Call Popup/CallPopup";
 import Friends from "../../Main Content/Friends/Friends";
 import { ContextMenuActions } from "./../../Store/store";
+import Spinner from "../../UI/Spinner/Spinner";
 
 function Main(props) {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ function Main(props) {
   let dmData = useSelector((state) => state.allDms);
   let serverData = useSelector((state) => state.allServers);
   const currentMainCont = useSelector((state) => state.currentMainCont);
+  let ContextMenu = useSelector((state) => state.contextMenu);
 
   let [VOICESTREAM, SETVOICESTREAM] = useState(null);
   let [socket, joinSocket] = useState(null);
@@ -35,8 +37,11 @@ function Main(props) {
 
   useEffect(() => {
     (async () => {
-      document.addEventListener("click", () => {
-        dispatch(ContextMenuActions.loadMenu(""));
+      document.addEventListener("click", (e) => {
+        let target = e.target.closest(".profileTrigger");
+        if (!target) {
+          dispatch(ContextMenuActions.loadMenu(""));
+        }
       });
 
       let data = await axios.get(`${CONSTANTS.ip}/api/getBasicData`);
@@ -82,7 +87,9 @@ function Main(props) {
 
   return (
     <div className="Dispel-pages">
+      <Spinner />
       <Nav socket={socket} />
+      {/* <DirectMessages data={currentMainCont} socket={socket} vcPeer={vcPeer} /> */}
       {currentMainCont.value === "dmCont" ? (
         <DirectMessages
           data={currentMainCont}

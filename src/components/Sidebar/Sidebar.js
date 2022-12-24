@@ -81,6 +81,35 @@ function Sidebar() {
           </Backdrop>
         )}
       </AnimatePresence>
+      <AnimatePresence initial={false} exitBeforeEnter={true}>
+        {sidebarIsOpen && (
+          <motion.div
+            className="LogoCont"
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+              transition: {
+                duration: 0.7,
+                type: "spring",
+              },
+            }}
+            exit={{
+              opacity: 0,
+              transition: {
+                duration: 0.7,
+                type: "spring",
+              },
+            }}
+          >
+            <h2>Dispel</h2>
+            <p>
+              Developed by <motion.span>Systile</motion.span>
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

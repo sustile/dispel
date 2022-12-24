@@ -121,17 +121,64 @@ function GlobalEventHandlers(props) {
     });
 
     socket.on("receive-message_dm", (data) => {
-      dispatch(
-        dmMessagesAction.addMessage({
-          objId: data.objId,
-          dmId: data.room,
-          message: data.message,
-          from: data.from,
-          name: data.name,
-          image: data.image,
-          createdAt: data.createdAt,
-        })
-      );
+      if (data.type.includes("reply")) {
+        dispatch(
+          dmMessagesAction.addMessage({
+            objId: data.objId,
+            dmId: data.room,
+            type: data.type,
+            message: data.message,
+            from: data.from,
+            name: data.name,
+            image: data.image,
+            createdAt: data.createdAt,
+            replyTo: data.replyTo,
+            replyMessage: data.replyMessage,
+          })
+        );
+      } else {
+        dispatch(
+          dmMessagesAction.addMessage({
+            objId: data.objId,
+            dmId: data.room,
+            type: data.type,
+            message: data.message,
+            from: data.from,
+            name: data.name,
+            image: data.image,
+            createdAt: data.createdAt,
+          })
+        );
+      }
+    });
+
+    socket.on("save-dm-message", (data) => {
+      if (data.status === "OK") {
+        let final = data.final;
+        let reply = data.reply;
+        data = data.data;
+        final.objId = data._id;
+        final.createdAt = data.createdAt;
+        socket.emit("send-message_dm", final);
+        dispatch(
+          dmMessagesAction.addMessage({
+            objId: final.objId,
+            type: final.type,
+            replyTo: reply.replyingTo,
+            replyMessage: reply.messageId,
+            dmId: data.dmId,
+            message: final.message,
+            from: USERDATA.id,
+            name: USERDATA.name,
+            image: USERDATA.image,
+            createdAt: final.createdAt,
+          })
+        );
+      }
+    });
+
+    socket.on("edit_message-dm", (data) => {
+      dispatch(dmMessagesAction.updateMessage(data));
     });
 
     socket.on("getCallData", (room) => {

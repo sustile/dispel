@@ -9,11 +9,42 @@
 }
 .Register-wrapper h2 {
   color: var(--primary-red);
-  font-size: 8rem;
-  letter-spacing: 5rem;
+  font-size: 6rem;
+  letter-spacing: 4rem;
   margin-left: 5rem;
   font-weight: 300;
   text-align: center;
+}
+.Register-wrapper .logoCont {
+  position: fixed;
+  top: 5rem;
+  left: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.Register-wrapper .logoCont .logo {
+  color: var(--primary-red);
+  font-size: 4rem;
+  letter-spacing: 2rem;
+  font-weight: 300;
+}
+.Register-wrapper .logoCont span {
+  color: #ddd;
+  font-size: 2rem;
+  margin-left: 5.2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5rem;
+}
+.Register-wrapper .logoCont span p {
+  display: inline-block;
+  color: #f15bb5;
+  font-size: 2.5rem;
+  letter-spacing: 0.5rem;
 }
 .Register-wrapper .Register-form {
   display: flex;
@@ -49,4 +80,28 @@
   background-color: var(--primary-red);
   cursor: pointer;
   color: #333;
+}
+.Register-wrapper .RegisterContBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+.Register-wrapper .RegisterContBtn span {
+  color: #ddd;
+  font-size: 2rem;
+}
+.Register-wrapper .RegisterContBtn button {
+  margin-top: 0.5rem;
+  border: 0;
+  outline: 0;
+  padding: 1rem 3rem;
+  border-radius: 1rem;
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: var(--primary-red);
+  background-color: transparent;
+  cursor: pointer;
+  border: 2px solid var(--primary-green-accent);
 }

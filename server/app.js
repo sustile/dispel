@@ -11,16 +11,9 @@ const { verify } = require("./middlewares/middleware");
 const router = require("./Routers/router");
 const app = express();
 
-// app.get("/logout", (req, res) => {
-//   res.cookie("jwt", "", {
-//     maxAge: 1,
-//   });
-//   res.redirect("/login");
-// });
-
 // app.use(morgan("dev"));
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: 15000000 }));
 app.use(express.static(path.join(__dirname, "../build")));
 
 app.use(function (req, res, next) {
@@ -42,6 +35,13 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.status(200).sendFile(path.join(__dirname, "../build/index.html"));
+});
+
+app.get("/logout", (req, res) => {
+  res.cookie("jwt", "", {
+    maxAge: 1,
+  });
+  res.redirect("/login");
 });
 
 app.use("/", router);

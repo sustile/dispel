@@ -341,6 +341,16 @@ const ContextMenu = createSlice({
   },
 });
 
+const spinner = createSlice({
+  name: "spinner",
+  initialState: false,
+  reducers: {
+    toggleSpinner(state, action) {
+      return action.payload;
+    },
+  },
+});
+
 const store = configureStore({
   reducer: {
     controls: controlsOptions.reducer,
@@ -352,6 +362,7 @@ const store = configureStore({
     allDmMessages: allDmMessages.reducer,
     currentCallStatus: currentCallStatus.reducer,
     contextMenu: ContextMenu.reducer,
+    spinner: spinner.reducer,
   },
 });
 
@@ -364,5 +375,6 @@ export const ConstantsActions = CONSTANTS.actions;
 export const dmMessagesAction = allDmMessages.actions;
 export const currentCallStatusAction = currentCallStatus.actions;
 export const ContextMenuActions = ContextMenu.actions;
+export const spinnerActions = spinner.actions;
 
 export default store;

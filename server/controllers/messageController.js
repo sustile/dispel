@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const messageModel = require("../models/messageModel");
-
 const message = mongoose.model("message", messageModel);
+module.exports.message = message;
 
 // const changeStream = message.watch([]);
 // changeStream.on("change", (next) => {
@@ -86,7 +86,6 @@ exports.editMessage = async (req, res) => {
           },
           {
             message: body.message,
-            type: body.type,
           }
         );
 
@@ -124,7 +123,7 @@ exports.lazyLoadMessages = async (req, res) => {
       return;
     }
 
-    const limit = 20;
+    const limit = 10;
     const page = (body.page - 1) * limit;
 
     const result = await message
@@ -132,6 +131,31 @@ exports.lazyLoadMessages = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(page)
       .limit(limit);
+    res.status(200).json({
+      status: "ok",
+      result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: "Something Went Wrong",
+    });
+  }
+};
+
+exports.getMessageData = async (req, res) => {
+  try {
+    const body = req.body;
+
+    if (!body) {
+      res.status(400).json({
+        status: "fail",
+        message: "No Data Provided",
+      });
+      return;
+    }
+
+    const result = await message.find({ _id: body.id });
     res.status(200).json({
       status: "ok",
       result,

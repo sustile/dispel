@@ -52,20 +52,13 @@
 .DirectMessages-Wrapper .DirectMessagesHeader .DirectMessagesCallToggle:disabled i, .DirectMessages-Wrapper .DirectMessagesHeader .DirectMessagesCallToggle:active:disabled i, .DirectMessages-Wrapper .DirectMessagesHeader .DirectMessagesCallToggle:hover:disabled i {
   color: rgb(121, 121, 121);
 }
-.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper {
-  width: 100%;
-  height: 95%;
-  padding: 0.5rem 1rem;
+.DirectMessages-Wrapper .DirectMessagesBody-Message-MainWrapper {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 0.5rem;
-  overflow-y: auto;
-  padding-bottom: 10rem;
-  position: relative;
+  height: 95%;
+  overflow: auto;
+  flex-direction: column-reverse;
 }
-.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .NoMessages {
+.DirectMessages-Wrapper .DirectMessagesBody-Message-MainWrapper .NoMessages {
   color: #ddd;
   font-size: 3rem;
   font-weight: 400;
@@ -76,43 +69,20 @@
   text-align: center;
   line-height: 2;
 }
-.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .NoMessages span {
+.DirectMessages-Wrapper .DirectMessagesBody-Message-MainWrapper .NoMessages span {
   color: var(--primary-red);
   font-weight: 500;
 }
-.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu {
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper {
+  width: 100%;
+  padding: 0.5rem 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 0.5rem;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  z-index: 30;
-  background-color: #333;
-  border-radius: 1rem;
-  padding: 0.5rem;
-  width: auto;
-  height: auto;
-}
-.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu .ContextMenuOption {
-  display: flex;
-  gap: 2rem;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 1rem;
-  width: 100%;
-  border-radius: 1rem;
-  cursor: pointer;
-}
-.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu .ContextMenuOption i {
-  color: var(--primary-green-accent);
-  font-size: 2.5rem;
-}
-.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessages_MessageContextMenu .ContextMenuOption span {
-  color: #ddd;
-  font-size: 1.8rem;
+  padding-bottom: 10rem;
+  position: relative;
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message {
   display: flex;
@@ -120,6 +90,39 @@
   padding: 1rem 2rem;
   border-radius: 0.5rem;
   width: 100%;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages-reply-Cont {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages-reply-Cont i {
+  color: var(--primary-red);
+  font-size: 2rem;
+  margin-left: 1.5rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages-reply-Cont img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages-reply-Cont h2 {
+  color: var(--primary-green-accent);
+  font-weight: 400;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages-reply-Cont h2:hover {
+  text-decoration: underline;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages-reply-Cont span {
+  color: #ddd;
+  font-size: 1.2rem;
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_MessageContextMenu {
   display: flex;
@@ -136,6 +139,7 @@
   padding: 1rem;
   width: auto;
   height: auto;
+  transform-origin: top left;
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_MessageContextMenu .ContextMenuOption {
   display: flex;
@@ -153,7 +157,91 @@
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_MessageContextMenu .ContextMenuOption span {
   color: #ddd;
+  font-size: 1.5rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 30;
+  background-color: rgb(32, 32, 32);
+  border-radius: 1rem;
+  padding: 1rem;
+  width: auto;
+  height: auto;
+  width: 37rem;
+  transform-origin: top left;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .ImgCont {
+  position: relative;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .ImgCont img,
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .ImgCont .NOCoverImage {
+  width: 35rem;
+  height: 15rem;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .ImgCont .NOCoverImage {
+  background-color: var(--primary-green-accent);
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .ImgCont .userProfileImage {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid rgb(32, 32, 32);
+  position: absolute;
+  bottom: 0;
+  transform: translateY(50%);
+  left: 2rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .userProfileData {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-left: 5rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .userProfileData span {
+  color: var(--primary-green-accent);
   font-size: 1.8rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .userProfileData p {
+  color: #ddd;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .userProfileAboutMe {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: var(--primary-bg);
+  padding: 1rem;
+  border-radius: 1rem;
+  width: 90%;
+  margin-top: 1.5rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .userProfileAboutMe span {
+  color: #ddd;
+  background-color: rgb(31, 31, 31);
+  font-size: 1.5rem;
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message .DirectMessages_UserProfileContext .userProfileAboutMe p {
+  color: #ddd;
+  font-size: 1.5rem;
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Details {
   display: flex;
@@ -189,6 +277,39 @@
   font-size: 1.3rem;
   font-weight: 500;
   margin-left: 5.2rem;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body p a {
+  color: var(--primary-red);
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .messageImg {
+  width: 40rem;
+  margin: 1rem;
+  margin-left: 5.2rem;
+  border-radius: 1rem;
+  object-fit: cover;
+  overflow: hidden;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .ImageFullWindow .Backdrop {
+  width: 100vw;
+  height: 100vh;
+  z-index: 90;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+.DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .ImageFullWindow .messageImgFullScreen {
+  width: 70vw;
+  max-height: 90vh;
+  border-radius: 1rem;
+  object-fit: cover;
+  overflow: hidden;
+  z-index: 95;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .DirectMessages-Wrapper .DirectMessagesBody-MessageWrapper .DirectMessagesBody-Message_Body .MessageEditForm {
   display: flex;
@@ -236,14 +357,14 @@
   color: #ddd;
 }
 .DirectMessages-Wrapper .DirectMessages-InputWrapper {
-  height: 8rem;
+  height: auto;
   position: absolute;
-  bottom: 0;
+  bottom: 4rem;
   left: 0;
   width: 100%;
   background-image: linear-gradient(to bottom, transparent 20%, var(--primary-bg));
 }
-.DirectMessages-Wrapper .DirectMessages-InputWrapper form input {
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .directMessages-input-cont {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -254,12 +375,63 @@
   padding: 1.2rem 3rem;
   border-radius: 2rem;
   background-color: #333;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .directMessages-input-cont .ReplyCont {
+  width: 100%;
+  background-color: rgb(31, 31, 31);
+  padding: 0.5rem 2rem;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5rem;
+}
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .directMessages-input-cont .ReplyCont span {
+  color: #ddd;
+  font-size: 1.5rem;
+}
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .directMessages-input-cont .ReplyCont i {
+  color: var(--primary-green-accent);
+  font-size: 1.8rem;
+  cursor: pointer;
+  background-color: #333;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .directMessages-input-cont .inputCont {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .directMessages-input-cont .inputCont input {
   color: #ddd;
   font-weight: 600;
   font-family: "Roboto Mono", monospace;
   font-size: 1.6rem;
   transition: all 0.2s ease-in-out;
+  border: 0;
+  outline: 0;
+  width: 100%;
+  background-color: transparent;
 }
-.DirectMessages-Wrapper .DirectMessages-InputWrapper form input:focus {
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .directMessages-input-cont .inputCont i {
+  background-color: rgb(34, 34, 34);
+  color: var(--primary-green-accent);
+  border-radius: 1rem;
+  padding: 0.4rem;
+  cursor: pointer;
+  transform: scale(2.2);
+}
+.DirectMessages-Wrapper .DirectMessages-InputWrapper form .inputFocused {
   box-shadow: 0 0 0 0.2rem var(--primary-red);
+}
+.DirectMessages-Wrapper .replying {
+  bottom: 6.4rem;
 }

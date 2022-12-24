@@ -144,4 +144,7 @@ router
     accountController.changeSecondaryData
   );
 
+// GET DATA ABT AN INDIVIDUAL MESSAGE BASED ON MESSAGE ID
+router.route("/api/getMessageData").post(messageController.getMessageData);
+
 module.exports = router;
