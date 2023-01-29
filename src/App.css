@@ -17,7 +17,7 @@
 }
 
 ::-webkit-scrollbar {
-  width: 1rem;
+  width: 0.4rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -26,7 +26,7 @@
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10rem;
-  background: var(--primary-blue);
+  background: var(--primary-red);
 }
 
 * {
@@ -42,5 +42,4 @@ html {
 body {
   font-family: "Roboto Mono", monospace;
   background-color: var(--primary-bg);
-  overflow-x: hidden;
 }

@@ -256,52 +256,29 @@ exports.changeData = async (req, res) => {
       });
       return;
     }
-
-    if (!file) {
-      if (body.newName !== "undefined") {
-        await account.findOneAndUpdate(
-          { _id: user.id },
-          { name: body.newName }
-        );
-        res.status(200).json({
-          status: "ok",
-        });
-      }
-    } else {
-      if (body.newName !== "undefined") {
-        if (user.image !== "default.png") {
-          let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
-          try {
-            fs.unlinkSync(imgPath);
-          } catch (err) {
-            console.log(err);
-          }
-        }
-        await account.findOneAndUpdate(
-          { _id: user.id },
-          { name: body.newName, image: file.filename }
-        );
-        res.status(200).json({
-          status: "ok",
-        });
-      } else {
-        if (user.image !== "default.png") {
-          let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
-          try {
-            fs.unlinkSync(imgPath);
-          } catch (err) {
-            console.log(err);
-          }
-        }
-        await account.findOneAndUpdate(
-          { _id: user.id },
-          { image: file.filename }
-        );
-        res.status(200).json({
-          status: "ok",
-        });
-      }
+    if (file) {
+      fs.copyFileSync(
+        file.path,
+        path.join(__dirname, "./../../build/Images/" + file.filename)
+      );
     }
+    if (file && user.image !== "default.png" && file.filename !== user.image) {
+      fs.unlinkSync(path.join(__dirname, "./../../build/Images/" + user.image));
+      fs.unlinkSync(
+        path.join(__dirname, "./../../public/Images/" + user.image)
+      );
+    }
+
+    await account.findOneAndUpdate(
+      { _id: user.id },
+      {
+        name: body.newName !== "undefined" ? body.newName : user.name,
+        image: file?.filename || user.image,
+      }
+    );
+    res.status(200).json({
+      status: "ok",
+    });
   } catch (err) {
     res.status(404).json({
       status: "fail",
@@ -571,84 +548,121 @@ exports.acceptRequest = async (req, res) => {
 };
 
 exports.changeSecondaryData = async (req, res) => {
-  try {
-    const user = req.user;
-    const file = req.file;
-    const body = req.body;
+  // try {
+  const user = req.user;
+  const file = req.file;
+  const body = req.body;
 
-    if (!user) {
-      res.status(404).json({
-        status: "fail",
-        message: "No User was Found",
-      });
-    } else {
-      if (file) {
-        if (user.coverImage === "undefined") {
-          if (body.aboutMe !== "undefined") {
-            await account.findOneAndUpdate(
-              { _id: user.id },
-              { coverImage: file.filename, aboutMe: body.aboutMe }
-            );
-          } else {
-            await account.findOneAndUpdate(
-              { _id: user.id },
-              { coverImage: file.filename }
-            );
-          }
-
-          res.status(200).json({
-            status: "ok",
-          });
-        } else {
-          let imgPath = path.join(
-            __dirname,
-            `./../public/img/${user.coverImage}`
-          );
-          try {
-            fs.unlinkSync(imgPath);
-
-            if (body.aboutMe !== "undefined") {
-              await account.findOneAndUpdate(
-                { _id: user.id },
-                { coverImage: file.filename, aboutMe: body.aboutMe }
-              );
-            } else {
-              await account.findOneAndUpdate(
-                { _id: user.id },
-                { coverImage: file.filename }
-              );
-            }
-
-            res.status(200).json({
-              status: "ok",
-            });
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      } else {
-        if (body.aboutMe !== "undefined") {
-          console.log(body.aboutMe);
-          await account.findOneAndUpdate(
-            { _id: user.id },
-            { aboutMe: body.aboutMe }
-          );
-
-          res.status(200).json({
-            status: "ok",
-          });
-        } else {
-          res.status(200).json({
-            status: "fail",
-            message: "Something went wrong",
-          });
-        }
-      }
-    }
-  } catch (err) {
+  if (!user) {
     res.status(404).json({
       status: "fail",
-      message: err.message,
+      message: "No User was Found",
     });
+    return;
   }
+  if (!body) {
+    res.status(404).json({
+      status: "fail",
+      message: "No Data was provided",
+    });
+    return;
+  }
+  if (file) {
+    fs.copyFileSync(
+      file.path,
+      path.join(__dirname, "./../../build/Images/" + file.filename)
+    );
+  }
+  if (
+    file &&
+    user.coverImage !== "undefined" &&
+    file.filename !== user.coverImage
+  ) {
+    fs.unlinkSync(
+      path.join(__dirname, "./../../build/Images/" + user.coverImage)
+    );
+    fs.unlinkSync(
+      path.join(__dirname, "./../../public/Images/" + user.coverImage)
+    );
+  }
+  await account.findOneAndUpdate(
+    { _id: user.id },
+    {
+      aboutMe: body.aboutMe !== "undefined" ? body.aboutMe : user.aboutMe,
+      coverImage: file?.filename || user.coverImage,
+    }
+  );
+  res.status(200).json({
+    status: "ok",
+  });
+  // else {
+  //   if (file) {
+  //     if (user.coverImage === "undefined") {
+  //       if (body.aboutMe !== "undefined") {
+  //         await account.findOneAndUpdate(
+  //           { _id: user.id },
+  //           { coverImage: file.filename, aboutMe: body.aboutMe }
+  //         );
+  //       } else {
+  //         await account.findOneAndUpdate(
+  //           { _id: user.id },
+  //           { coverImage: file.filename }
+  //         );
+  //       }
+
+  //       res.status(200).json({
+  //         status: "ok",
+  //       });
+  //     } else {
+  //       let imgPath = path.join(
+  //         __dirname,
+  //         `./../../public/Images/${user.coverImage}`
+  //       );
+  //       try {
+  //         fs.unlinkSync(imgPath);
+
+  //         if (body.aboutMe !== "undefined") {
+  //           await account.findOneAndUpdate(
+  //             { _id: user.id },
+  //             { coverImage: file.filename, aboutMe: body.aboutMe }
+  //           );
+  //         } else {
+  //           await account.findOneAndUpdate(
+  //             { _id: user.id },
+  //             { coverImage: file.filename }
+  //           );
+  //         }
+
+  //         res.status(200).json({
+  //           status: "ok",
+  //         });
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   } else {
+  //     if (body.aboutMe !== "undefined") {
+  //       console.log(body.aboutMe);
+  //       await account.findOneAndUpdate(
+  //         { _id: user.id },
+  //         { aboutMe: body.aboutMe }
+  //       );
+
+  //       res.status(200).json({
+  //         status: "ok",
+  //       });
+  //     } else {
+  //       res.status(200).json({
+  //         status: "fail",
+  //         message: "Something went wrong",
+  //       });
+  //     }
+  //   }
+  // }
+  // } catch (err) {
+  //   res.status(404).json({
+  //     status: "fail",
+  //     message: err.message,
+  //   });
+  // }
 };

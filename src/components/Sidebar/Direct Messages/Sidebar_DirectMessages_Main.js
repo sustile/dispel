@@ -13,10 +13,14 @@ function Sidebar_DirectMessages_Main(props) {
           <Sidebar_DirectMessages_User
             key={el.dmId}
             data={el}
+            vcPeer={props.vcPeer}
             closeSidebar={props.closeSidebar}
           />
         );
       })}
+      {dmsData.length === 0 && (
+        <p className="addSomeFriends">Add some Friends to Get Chatting</p>
+      )}
     </div>
   );
 }

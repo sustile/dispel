@@ -4,9 +4,20 @@ import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import { CurrentMainContActions } from "./../../Store/store";
 
+import useStandaloneOnlineHandler from "../../Main Content/useStandaloneOnlineHandler";
+import { useEffect } from "react";
+
 function Sidebar_DirectMessages_User(props) {
   const Dispatch = useDispatch();
+  let vcPeer = props.vcPeer;
   const CurrentMain = useSelector((state) => state.currentMainCont);
+  const onlineStatus = useSelector((state) => state.online);
+
+  useStandaloneOnlineHandler(vcPeer, props.data.toId);
+  const [isOnline, setIsOnline] = useState(false);
+  useEffect(() => {
+    setIsOnline(onlineStatus.includes(props.data.toId));
+  }, [onlineStatus]);
 
   function ClickHandler(e) {
     e.preventDefault();
@@ -54,7 +65,10 @@ function Sidebar_DirectMessages_User(props) {
       }}
       className="DirectMessages_Sidebar_Main_DM"
     >
-      <img src={`/Images/${props.data.image}`} alt="" />
+      <div className="imageDiv">
+        <img src={`/Images/${props.data.image}`} alt="" />
+        {isOnline && <span className="statusTag"></span>}
+      </div>
       <p>{props.data.to}</p>
     </motion.div>
   );

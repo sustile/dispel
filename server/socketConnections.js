@@ -1,6 +1,13 @@
 const { message } = require("./controllers/messageController");
 const { account } = require("./controllers/accountController");
 const mongoose = require("mongoose");
+const redis = require("redis");
+const client = redis.createClient();
+
+(async () => {
+  await client.connect();
+})();
+// 6379 PORT -> REDIS
 
 const io = require("socket.io")(5000, {
   maxHttpBufferSize: 1e8,
@@ -13,6 +20,17 @@ module.exports = io;
 
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
+
+  socket.on("joined-server", async (id) => {
+    await client.set(socket.id, id);
+    await client.set(id, socket.id);
+  });
+
+  socket.on("disconnect", async () => {
+    let x = await client.get(socket.id);
+
+    setOffline(x, socket);
+  });
 
   socket.on("join-room", (room) => {
     socket.join(room);
@@ -52,17 +70,38 @@ io.on("connection", (socket) => {
   });
 
   socket.on("save-dm-message", (id, fileData, data, socketId) => {
-    console.log(socketId);
     saveMessages(id, data, socket, fileData, socketId, io);
   });
 
-  // socket.on("image", (image) => {
-  //   console.log("yes");
-  //   const buffer = Buffer.from(image, "base64");
+  socket.on("standalone-friend-request-verdict", async (data) => {
+    let x = await client.get(data.to);
+    if (x) {
+      io.to(x).emit("friend-request-verdict", data);
+    }
+  });
 
-  //   console.log(buffer);
-  // });
+  socket.on("standalone-friend-request", async (data) => {
+    let x = await client.get(data.to);
+    if (x) {
+      io.to(x).emit("friend-request", data);
+    }
+  });
 });
+
+async function setOffline(userId, socket) {
+  const user = await account.findOne({ _id: userId });
+  if (!user) return;
+  let dms = user.friends;
+  dms.forEach(async (id) => {
+    let x = await client.get(id);
+    if (!x) return;
+    socket.to(x).emit("user-offline", userId);
+  });
+  try {
+    await client.del(socket.id);
+    await client.del(userId);
+  } catch (err) {}
+}
 
 async function saveMessages(userId, data, socket, otherData, socketId, io) {
   if (!data) {

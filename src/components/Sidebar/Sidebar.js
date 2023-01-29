@@ -5,7 +5,7 @@ import Backdrop from "../UI/SidebarBackdrop/Backdrop";
 import "./Sidebar.css";
 import { AnimatePresence, motion } from "framer-motion";
 
-function Sidebar() {
+function Sidebar({ vcPeer }) {
   const [sidebarIsOpen, setSidebarOpen] = useState(false);
 
   function toggleSidebar() {
@@ -76,8 +76,11 @@ function Sidebar() {
       <AnimatePresence initial={false} exitBeforeEnter={true}>
         {sidebarIsOpen && (
           <Backdrop closeModal={toggleSidebar}>
-            <Sidebar_DirectMessages closeSidebar={closeSidebar} />
-            <Sidebar_Servers closeSidebar={closeSidebar} />
+            <Sidebar_DirectMessages
+              closeSidebar={closeSidebar}
+              vcPeer={vcPeer}
+            />
+            <Sidebar_Servers closeSidebar={closeSidebar} vcPeer={vcPeer} />
           </Backdrop>
         )}
       </AnimatePresence>

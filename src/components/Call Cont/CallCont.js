@@ -57,12 +57,26 @@ function CallCont(props) {
     >
       <div className="Call_details">
         <span className="activeCallText">
-          In Active Call with {activeCalldata.name}
+          {!currentCallStatus.waiting.status &&
+            `In Active Call with ${activeCalldata.name}`}
+          {currentCallStatus.waiting.status &&
+            `Waiting for Connection from ${currentCallStatus.waiting.name}`}
         </span>
-        <div className="Call_details-User">
-          <img src={`/Images/${activeCalldata.image}`} />
-          <span>{activeCalldata.name}</span>
-        </div>
+        {currentCallStatus.status && (
+          <div className="Call_details-User">
+            <img src={`/Images/${activeCalldata.image}`} />
+            <span>{activeCalldata.name}</span>
+          </div>
+        )}
+
+        {currentCallStatus.waiting.status && (
+          <lord-icon
+            src="https://cdn.lordicon.com/kvsszuvz.json"
+            trigger="loop"
+            colors="primary:#9f85ff,secondary:#08a88a"
+            style={{ scale: "2.2", marginLeft: "1rem" }}
+          ></lord-icon>
+        )}
       </div>
       <motion.button
         className="DirectMessagesCallLeave"

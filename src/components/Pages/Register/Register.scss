@@ -16,10 +16,27 @@
     text-align: center;
   }
 
-  .Register-form {
+  .Register-form_Main {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+
+    .inputSection {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .Section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+    }
 
     input {
       border: 0;

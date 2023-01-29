@@ -10,45 +10,11 @@ import AddFriends from "./AddFriends";
 function Friends(props) {
   let socket = props.socket;
 
-  let [active, setActive] = useState("online");
+  let [active, setActive] = useState("all");
 
   return (
     <div className="Friends-Wrapper">
       <div className="Friends-type-Selector">
-        <motion.button
-          className={active === "online" ? "active" : ""}
-          whileHover={
-            active !== "online"
-              ? {
-                  scale: 1.12,
-                  backgroundColor: "rgb(39, 39, 39)",
-                  transition: {
-                    type: "spring",
-                    duration: 0.3,
-                  },
-                }
-              : {
-                  scale: 1.12,
-                  transition: {
-                    type: "spring",
-                    duration: 0.3,
-                  },
-                }
-          }
-          onClick={() => {
-            if (active !== "online") setActive("online");
-          }}
-          whileTap={{
-            scale: 0.9,
-            transition: {
-              type: "spring",
-              duration: 0.3,
-            },
-          }}
-        >
-          Online
-        </motion.button>
-
         <motion.button
           className={active === "all" ? "active" : ""}
           whileHover={
@@ -81,6 +47,39 @@ function Friends(props) {
           }}
         >
           All
+        </motion.button>
+        <motion.button
+          className={active === "online" ? "active" : ""}
+          whileHover={
+            active !== "online"
+              ? {
+                  scale: 1.12,
+                  backgroundColor: "rgb(39, 39, 39)",
+                  transition: {
+                    type: "spring",
+                    duration: 0.3,
+                  },
+                }
+              : {
+                  scale: 1.12,
+                  transition: {
+                    type: "spring",
+                    duration: 0.3,
+                  },
+                }
+          }
+          onClick={() => {
+            if (active !== "online") setActive("online");
+          }}
+          whileTap={{
+            scale: 0.9,
+            transition: {
+              type: "spring",
+              duration: 0.3,
+            },
+          }}
+        >
+          Online
         </motion.button>
 
         <motion.button
@@ -151,10 +150,10 @@ function Friends(props) {
           Add Friends
         </motion.button>
       </div>
-      {active === "online" && <OnlineFriends />}
-      {active === "all" && <AllFriends socket={socket} />}
-      {active === "pending" && <PendingRequests />}
-      {active === "addfriends" && <AddFriends />}
+      {active === "online" && <OnlineFriends vcPeer={props.vcPeer} />}
+      {active === "all" && <AllFriends socket={socket} vcPeer={props.vcPeer} />}
+      {active === "pending" && <PendingRequests socket={socket} />}
+      {active === "addfriends" && <AddFriends socket={socket} />}
     </div>
   );
 }

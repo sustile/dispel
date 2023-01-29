@@ -1,0 +1,48 @@
+.Notifications {
+  z-index: 90;
+  position: fixed;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(42, 42, 42);
+  padding: 1rem 3rem;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+
+  .data-cont {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+
+    i {
+      font-size: 4rem;
+      color: var(--primary-green-accent);
+    }
+
+    .ph-circle-wavy-warning {
+      color: var(--secondary-red);
+    }
+
+    p {
+      font-family: "Roboto Mono", monospace;
+      font-size: 1.8rem;
+      color: #ddd;
+      background-color: rgb(35, 35, 35);
+      padding: 1rem;
+      border-radius: 1rem;
+    }
+  }
+
+  .closeNotis {
+    font-size: 2rem;
+    color: var(--secondary-red);
+    background-color: rgb(35, 35, 35);
+    border-radius: 50%;
+    padding: 0.8rem;
+    cursor: pointer;
+  }
+}

@@ -11,6 +11,7 @@ function CallPopup(props) {
   let [displayData, setDisplayData] = useState({
     name: "",
     image: "",
+    room: "",
   });
   let [initial, setInital] = useState(false);
 
@@ -39,6 +40,7 @@ function CallPopup(props) {
     setDisplayData({
       name: "",
       image: "",
+      room: "",
     });
   }
 
@@ -47,16 +49,16 @@ function CallPopup(props) {
     setDisplayData({
       name: "",
       image: "",
+      room: "",
     });
   }
 
   useEffect(() => {
     if (!initial) {
       socket.on("incoming-call", (data) => {
-        if (data.room === currentCallStatusRef.current.currentCallCont) {
-          setInital(true);
+        if (data.room === currentCallStatusRef.current.waiting.room) {
           socket.emit("joined-call", {
-            room: currentMainContRef.current.id,
+            room: currentCallStatusRef.current.waiting.room,
             id: USERDATAref.current.id,
             name: USERDATAref.current.name,
             image: USERDATAref.current.image,
@@ -65,21 +67,42 @@ function CallPopup(props) {
         } else {
           setDisplayData({
             name: data.name,
+            room: data.room,
             image: data.image,
           });
           setDisplayPopup(true);
 
-          setTimeout(() => {
-            setDisplayPopup(false);
-            setDisplayData({
-              name: "",
-              image: "",
-            });
-          }, 10 * 1000);
+          // let timer = setTimeout(() => {
+          //   setDisplayPopup(false);
+          //   setDisplayData({
+          //     name: "",
+          //     image: "",
+          //   });
+          // }, 10 * 1000);
+          // return () => {
+          //   clearTimeout(timer);
+          // };
         }
+        setInital(true);
       });
     }
   }, [initial]);
+
+  useEffect(() => {
+    if (displayPopup) {
+      let timer = setTimeout(() => {
+        setDisplayPopup(false);
+        setDisplayData({
+          name: "",
+          image: "",
+          room: "",
+        });
+      }, 10 * 1000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [displayPopup]);
 
   return (
     <AnimatePresence initial={false} exitBeforeEnter={true}>
@@ -101,9 +124,13 @@ function CallPopup(props) {
           ></motion.div>
           <motion.div
             className="PopupCont"
-            initial={{ transform: "translate(-50%, -50%) scale(0)" }}
+            initial={{
+              transform: "translate(-50%, -50%) scale(0)",
+              opacity: 0,
+            }}
             animate={{
               transform: "translate(-50%, -50%) scale(1)",
+              opacity: 1,
               transition: {
                 duration: 0.5,
                 type: "spring",
@@ -111,7 +138,7 @@ function CallPopup(props) {
                 stiffness: 500,
               },
             }}
-            exit={{ transform: "translate(-50%, -50%) scale(1)" }}
+            exit={{ transform: "translate(-50%, -50%) scale(0.7)", opacity: 0 }}
           >
             <h2>Incoming Call</h2>
             <div className="call_details">

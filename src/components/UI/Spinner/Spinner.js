@@ -9,7 +9,17 @@ function Spinner() {
   return (
     <AnimatePresence initial={false} exitBeforeEnter={true}>
       {spinnerState && (
-        <div className="Spinner">
+        <motion.div
+          className="Spinner"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: {
+              duration: 0.3,
+            },
+          }}
+          exit={{ opacity: 0 }}
+        >
           <div className="container">
             <svg viewBox="0 0 100 100">
               <defs>
@@ -22,10 +32,25 @@ function Spinner() {
                   />
                 </filter>
               </defs>
-              <circle id="spinner" cx="50" cy="50" r="45" />
+              <motion.circle
+                id="spinner"
+                cx="50"
+                cy="50"
+                r="45"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  transition: {
+                    duration: 0.3,
+                    type: "spring",
+                  },
+                }}
+                exit={{ opacity: 0, scale: 0 }}
+              />
             </svg>
           </div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

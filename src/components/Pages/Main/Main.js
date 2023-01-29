@@ -7,6 +7,7 @@ import Home from "../../Main Content/Home/Home";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { io } from "./../../../../node_modules/socket.io/client-dist/socket.io";
+import useStandaloneOnlineHandler from "../../Main Content/useStandaloneOnlineHandler";
 
 import Peer from "peerjs";
 
@@ -19,8 +20,14 @@ import { useState } from "react";
 import GlobalEventHandlers from "../../Main Content/GlobalEventHandlers";
 import CallPopup from "../../Call Popup/CallPopup";
 import Friends from "../../Main Content/Friends/Friends";
-import { ContextMenuActions } from "./../../Store/store";
+import {
+  ContextMenuActions,
+  incomingRequestsAction,
+  outgoingRequestsAction,
+} from "./../../Store/store";
 import Spinner from "../../UI/Spinner/Spinner";
+import Settings from "../../Main Content/Settings/Settings";
+import Notifications from "../../UI/Notifications/Notifications";
 
 function Main(props) {
   const dispatch = useDispatch();
@@ -69,11 +76,21 @@ function Main(props) {
         dispatch(AllServerActions.loadServers(houseData.data.houses));
       }
 
+      let friendData = await axios.get(
+        `${CONSTANTS.ip}/api/getAllPendingRequests`
+      );
+      if (friendData.data.status === "ok") {
+        dispatch(incomingRequestsAction.setData(friendData.data.iCncoming));
+        dispatch(outgoingRequestsAction.setData(friendData.data.outgoing));
+      }
+
       let x = io("http://localhost:5000", { transports: ["websocket"] });
 
       dmsData.data.dms.forEach((el) => x.emit("join-room", el));
 
       joinSocket(x);
+
+      x.emit("joined-server", data.data.user.id);
 
       setVcPeer(
         new Peer(data.data.user.id, {
@@ -88,7 +105,8 @@ function Main(props) {
   return (
     <div className="Dispel-pages">
       <Spinner />
-      <Nav socket={socket} />
+      <Notifications />
+      <Nav vcPeer={vcPeer} socket={socket} />
       {/* <DirectMessages data={currentMainCont} socket={socket} vcPeer={vcPeer} /> */}
       {currentMainCont.value === "dmCont" ? (
         <DirectMessages
@@ -105,7 +123,12 @@ function Main(props) {
         ""
       )}
       {currentMainCont.value === "friendsCont" ? (
-        <Friends socket={socket} />
+        <Friends socket={socket} vcPeer={vcPeer} />
+      ) : (
+        ""
+      )}
+      {currentMainCont.value === "settingsCont" ? (
+        <Settings socket={socket} />
       ) : (
         ""
       )}

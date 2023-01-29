@@ -9,7 +9,7 @@ import { dmMessagesAction, spinnerActions } from "./../../Store/store";
 import { useEffect } from "react";
 import axios from "axios";
 import DirectMessages_MessageMenu from "../../ContextMenus/DirectMessages_MessageMenu";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 function replyReducerFunction(state, action) {
   if (action.type === "SETDATA") {
@@ -33,6 +33,7 @@ function DirectMessages(props) {
 
   let [showContextMenu, setShowContextMenu] = useState(false);
   let [inputFocus, setInputFocus] = useState(false);
+  let [showSubmit, setSubmit] = useState(false);
   let [reply, replyReducer] = useReducer(replyReducerFunction, {
     status: false,
     messageId: "",
@@ -53,6 +54,7 @@ function DirectMessages(props) {
   else currentDmData = currentDmData[0];
 
   let [toBeRendered, setToBeRendered] = useState([]);
+  let [noData, setNoData] = useState(false);
 
   function setReply(e) {
     replyReducer(e);
@@ -276,6 +278,8 @@ function DirectMessages(props) {
               image: data.user.image,
               name: data.user.name,
               replyMessage: x.message,
+              userId: x.userId,
+              replyMessageId: x._id,
             };
 
             if (el.type.includes("image")) {
@@ -338,6 +342,10 @@ function DirectMessages(props) {
           }
         }
 
+        if (final.length === 0) {
+          setNoData(true);
+        }
+
         dispatch(spinnerActions.toggleSpinner(false));
         setToBeRendered(final);
 
@@ -349,7 +357,9 @@ function DirectMessages(props) {
           });
         }, 100);
       } else {
+        dispatch(spinnerActions.toggleSpinner(false));
         setToBeRendered([]);
+        setNoData(true);
       }
     }, 1000);
 
@@ -368,6 +378,7 @@ function DirectMessages(props) {
         if (scrollBtm === main.scrollHeight) {
           if (currentDmData.isMaximum) return;
 
+          dispatch(spinnerActions.toggleSpinner(true));
           let data = await getMessagesFromServer(
             currentCont.id,
             currentDmData.page + 1
@@ -406,6 +417,7 @@ function DirectMessages(props) {
                 );
               }
             } else {
+              dispatch(spinnerActions.toggleSpinner(false));
               dispatch(
                 dmMessagesAction.updateMaximum({
                   dmId: currentCont.id,
@@ -536,18 +548,19 @@ function DirectMessages(props) {
         <div className="DirectMessagesBody-MessageWrapper" ref={messageCont}>
           {toBeRendered}
           {/* <DirectMessages_Message
-          key="ASDSADASDSA"
-          data={{
-            name: "Systile",
-            image: "test.gif",
-            id: "03824923023",
-            message: "test",
-            createdAt: "2022-12-13T10:32:27.433+00:00",
-          }}
-          showContextMenu={showContextMenu}
-          setShowContextMenu={setContextMenu}
-          setReply={setReply}
-        /> */}
+            key="ASDSADASDSA"
+            data={{
+              name: "Systile",
+              image: "test.gif",
+              id: "03824923023",
+              type: "normal",
+              message: "test",
+              createdAt: "2022-12-13T10:32:27.433+00:00",
+            }}
+            showContextMenu={showContextMenu}
+            setShowContextMenu={setContextMenu}
+            setReply={setReply}
+          /> */}
         </div>
 
         {toBeRendered.length === 0 && (
@@ -565,67 +578,120 @@ function DirectMessages(props) {
         }
       >
         <form onSubmit={inputHandler}>
-          <div
-            className={
-              inputFocus
-                ? "directMessages-input-cont inputFocused"
-                : "directMessages-input-cont"
-            }
-          >
-            {reply.status && (
-              <div className="ReplyCont">
-                <span>Replying to {reply.name}</span>
-                <i
-                  class="ph-x-bold"
-                  onClick={() =>
-                    replyReducer({
-                      type: "RESET",
-                    })
-                  }
-                ></i>
+          <div className="directMessages-input-cont">
+            <div
+              className={
+                inputFocus
+                  ? "directMessages-input-cont-primary inputFocused"
+                  : "directMessages-input-cont-primary"
+              }
+            >
+              {reply.status && (
+                <div className="ReplyCont">
+                  <span>Replying to {reply.name}</span>
+                  <i
+                    class="ph-x-bold"
+                    onClick={() =>
+                      replyReducer({
+                        type: "RESET",
+                      })
+                    }
+                  ></i>
+                </div>
+              )}
+              <div className="inputCont">
+                <input
+                  type="text"
+                  placeholder={`Send a Message to ${props.data.name}`}
+                  maxLength="200"
+                  minLength="1"
+                  ref={inputRef}
+                  // onChange={(e) => {
+                  //   if (e.target.value.trim() !== "") {
+                  //     if (showSubmit) return;
+                  //     setSubmit(true);
+                  //   } else {
+                  //     setSubmit(false);
+                  //   }
+                  // }}
+                  onFocus={() => setInputFocus(true)}
+                  onBlur={() => setInputFocus(false)}
+                />
               </div>
-            )}
-            <div className="inputCont">
-              <input
-                type="text"
-                placeholder={`Send a Message to ${props.data.name}`}
-                maxLength="200"
-                minLength="1"
-                ref={inputRef}
-                onFocus={() => setInputFocus(true)}
-                onBlur={() => setInputFocus(false)}
-              />
-              <input
-                type="file"
-                style={{ display: "none" }}
-                id="fileInput"
-                accept="image/*"
-                multiple
-                onChange={fileHandler}
-              />
-              <label htmlFor="fileInput">
-                <motion.i
-                  initial={{
-                    scale: 2.2,
-                  }}
-                  whileHover={{
-                    scale: 2.5,
-                    transition: {
-                      duration: 0.3,
-                      type: "spring",
-                    },
-                  }}
-                  whileTap={{
-                    scale: 2,
-                    transition: {
-                      duration: 0.3,
-                      type: "spring",
-                    },
-                  }}
-                  class="ph-image-square-bold"
-                ></motion.i>
-              </label>
             </div>
+            {/* <AnimatePresence>
+              {showSubmit && (
+                <motion.button
+                  type="submit"
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: 1,
+                    transition: {
+                      duration: 0.2,
+                      type: "spring",
+                    },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    transition: {
+                      duration: 0.2,
+                      type: "spring",
+                    },
+                  }}
+                >
+                  <motion.i
+                    initial={{
+                      scale: 1,
+                    }}
+                    whileHover={{
+                      scale: 1.1,
+                      transition: {
+                        duration: 0.3,
+                        type: "spring",
+                      },
+                    }}
+                    whileTap={{
+                      scale: 1,
+                      transition: {
+                        duration: 0.3,
+                        type: "spring",
+                      },
+                    }}
+                    className="ph-paper-plane-right-bold submitBtn"
+                  ></motion.i>
+                </motion.button>
+              )}
+            </AnimatePresence> */}
+            <input
+              type="file"
+              style={{ display: "none" }}
+              id="fileInput"
+              accept="image/*"
+              multiple
+              onChange={fileHandler}
+            />
+            <label htmlFor="fileInput">
+              <motion.i
+                initial={{
+                  scale: 1,
+                }}
+                whileHover={{
+                  scale: 1.1,
+                  transition: {
+                    duration: 0.3,
+                    type: "spring",
+                  },
+                }}
+                whileTap={{
+                  scale: 1,
+                  transition: {
+                    duration: 0.3,
+                    type: "spring",
+                  },
+                }}
+                class="ph-image-square-bold imageBtn"
+              ></motion.i>
+            </label>
           </div>
         </form>
       </div>

@@ -14,19 +14,31 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "./../../build/Images"));
+    cb(null, path.join(__dirname, "./../../public/Images"));
   },
 
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    if (req.path === "/api/changeSecondaryData") {
+      console.log(
+        "yes",
+        req.user.id + "_COVER" + path.extname(file.originalname)
+      );
+      cb(null, req.user.id + "_COVER" + path.extname(file.originalname));
+    } else {
+      cb(null, req.user.id + path.extname(file.originalname));
+    }
   },
 });
 
 const uploadImage = multer({ storage: storage });
+// const uploadImage2 = multer({ storage: storageB });
+
+function fileUpload(req, res, next) {
+  uploadImage.single("image")(req, res, next);
+  next();
+}
 // MULTER
-router
-  .route("/api/signup")
-  .post(uploadImage.single("image"), accountController.createAccount);
+router.route("/api/signup").post(accountController.createAccount);
 
 router.route("/api/login").post(accountController.loginAccount);
 

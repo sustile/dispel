@@ -2,17 +2,24 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { AllDmsActions } from "../../Store/store";
+import { AllDmsActions, CurrentMainContActions } from "../../Store/store";
+
+import useStandaloneOnlineHandler from "../useStandaloneOnlineHandler";
 
 function AllFriends(props) {
   const CONSTANTS = useSelector((state) => state.CONSTANTS);
   let socket = props.socket;
+  let vcPeer = props.vcPeer;
   let [renderData, setRenderData] = useState([]);
+  let [noData, setNoData] = useState(false);
 
   useEffect(() => {
     (async () => {
       let data = await axios.get(`${CONSTANTS.ip}/api/getAllFriends`);
       if (data.data.status === "ok") {
+        if (data.data.friends.length === 0) {
+          setNoData(true);
+        }
         setRenderData(data.data.friends);
       }
     })();
@@ -25,9 +32,9 @@ function AllFriends(props) {
       </div>
       <div className="Friends-MasterCont_RenderCont">
         {renderData.map((el) => {
-          return <Friends_User data={el} socket={socket} />;
+          return <Friends_User data={el} socket={socket} vcPeer={vcPeer} />;
         })}
-        {renderData.length === 0 && (
+        {noData && renderData.length === 0 && (
           <h2 className="NoData">
             You have no Friends <br />
             Head Over to "<span>Add Friends</span>" to start chatting
@@ -42,10 +49,11 @@ function Friends_User(props) {
   let userId = props.data;
   let socket = props.socket;
   let dispatch = useDispatch();
+  const dmsData = useSelector((state) => state.allDms);
 
   let [renderData, setRenderData] = useState({
     name: "",
-    image: "",
+    image: "default.png",
   });
   const CONSTANTS = useSelector((state) => state.CONSTANTS);
 
@@ -64,27 +72,40 @@ function Friends_User(props) {
     })();
   }, []);
 
+  useStandaloneOnlineHandler(props.vcPeer, userId);
+
   async function clickHandler() {
+    let x = dmsData.filter((el) => el.toId === userId);
+    if (x.length !== 0) {
+      // OPEN DM
+      x = x[0];
+      dispatch(
+        CurrentMainContActions.changeCont({
+          value: "dmCont",
+          id: x.dmId,
+          name: x.to,
+        })
+      );
+      return;
+    }
+
     let lol = await axios.post(`${CONSTANTS.ip}/api/addNewDm`, {
       person2: userId,
     });
     if (lol.data.status === "ok") {
-      // successfully create dm
-      let dmsData = await axios.get(`${CONSTANTS.ip}/api/getAllDms`);
-      if (dmsData.data.status === "ok") {
-        let final = [];
-
-        for (let el of dmsData.data.dms) {
-          let dm = await axios.post(`${CONSTANTS.ip}/api/getDm`, {
-            id: el,
-          });
-          if (dm.data.status === "ok") {
-            final.push(dm.data.data);
-          }
-        }
-        dispatch(AllDmsActions.loadDMs(final));
-
-        dmsData.data.dms.forEach((el) => socket.emit("join-room", el));
+      let dm = await axios.post(`${CONSTANTS.ip}/api/getDm`, {
+        id: lol.data.dmId,
+      });
+      if (dm.data.status === "ok") {
+        dispatch(AllDmsActions.addDm(dm.data.data));
+        socket.emit("join-room", lol.data.dmId);
+        dispatch(
+          CurrentMainContActions.changeCont({
+            value: "dmCont",
+            id: lol.data.dmId,
+            name: dm.data.data.to,
+          })
+        );
       }
     }
   }
@@ -100,33 +121,37 @@ function Friends_User(props) {
       }}
       className="Friends-MasterCont_RenderCont-friend"
     >
-      <div className="detailsCont">
-        <img src={`/Images/${renderData.image}`} />
-        <div className="userDetails">
-          <span>{renderData.name}</span>
-          <p>{userId}</p>
-        </div>
-      </div>
-      <motion.i
-        className="ph-chats-bold"
-        whileHover={{
-          scale: 1.2,
-          transition: {
-            duration: 0.5,
-            type: "spring",
-          },
-        }}
-        onClick={clickHandler}
-        whileTap={{
-          scale: 0.9,
-          transition: {
-            duration: 0.1,
-            type: "spring",
-            damping: 25,
-            stiffness: 500,
-          },
-        }}
-      ></motion.i>
+      {renderData.name && (
+        <React.Fragment>
+          <div className="detailsCont">
+            <img src={`/Images/${renderData.image}`} />
+            <div className="userDetails">
+              <span>{renderData.name}</span>
+              <p>{userId}</p>
+            </div>
+          </div>
+          <motion.i
+            className="ph-chats-bold"
+            whileHover={{
+              scale: 1.2,
+              transition: {
+                duration: 0.5,
+                type: "spring",
+              },
+            }}
+            onClick={clickHandler}
+            whileTap={{
+              scale: 0.9,
+              transition: {
+                duration: 0.1,
+                type: "spring",
+                damping: 25,
+                stiffness: 500,
+              },
+            }}
+          ></motion.i>
+        </React.Fragment>
+      )}
     </motion.div>
   );
 }

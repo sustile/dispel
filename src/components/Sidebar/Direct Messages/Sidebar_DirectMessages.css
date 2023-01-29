@@ -13,6 +13,15 @@
   z-index: 50;
   overflow-y: auto;
 }
+.DirectMessages_Sidebar_Main .addSomeFriends {
+  color: var(--primary-green-accent);
+  font-size: 1.8rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
+  line-height: 1.4;
+  background-color: rgb(46, 46, 46);
+}
 .DirectMessages_Sidebar_Main h2 {
   text-align: center;
   margin-bottom: 0.5rem;
@@ -40,12 +49,25 @@
   padding: 0.5rem 2rem;
   cursor: pointer;
 }
-.DirectMessages_Sidebar_Main_DM img {
+.DirectMessages_Sidebar_Main_DM .imageDiv {
+  position: relative;
+}
+.DirectMessages_Sidebar_Main_DM .imageDiv img {
   width: 5rem;
   height: 5rem;
   object-fit: cover;
   border-radius: 50%;
   overflow: hidden;
+}
+.DirectMessages_Sidebar_Main_DM .imageDiv .statusTag {
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--primary-green-accent);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: 3px solid #333;
 }
 .DirectMessages_Sidebar_Main_DM p {
   font-family: "Roboto Mono", monospace;

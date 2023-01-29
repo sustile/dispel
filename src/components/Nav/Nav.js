@@ -13,7 +13,7 @@ function Nav(props) {
   return (
     <div className="Nav">
       <div className="Nav_Left">
-        <Sidebar />
+        <Sidebar vcPeer={props.vcPeer} />
         <Controls />
         <div className="userDetails">
           <img src={`/Images/${userData.image}`} />
@@ -24,7 +24,9 @@ function Nav(props) {
         </div>
       </div>
       <AnimatePresence initial={false} exitBeforeEnter={true}>
-        {currentCallStatus.status && <CallCont socket={props.socket} />}
+        {(currentCallStatus.status || currentCallStatus.waiting.status) && (
+          <CallCont socket={props.socket} />
+        )}
       </AnimatePresence>
     </div>
   );

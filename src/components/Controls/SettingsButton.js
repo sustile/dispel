@@ -1,11 +1,20 @@
 import React from "react";
 import "./Settings.scss";
 import { motion } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
+import { CurrentMainContActions } from "../Store/store";
 
-function SettingsButton() {
+function SettingsButton(props) {
+  let dispatch = useDispatch();
+  const currentMainCont = useSelector((state) => state.currentMainCont);
+
   return (
     <motion.i
-      className="ph-gear-bold settingsTrigger"
+      className={
+        currentMainCont.value === "settingsCont"
+          ? "ph-gear-bold settingsTrigger activeCont"
+          : "ph-gear-bold settingsTrigger"
+      }
       whileHover={{
         rotate: 180,
         transition: {
@@ -21,6 +30,17 @@ function SettingsButton() {
           damping: 25,
           stiffness: 500,
         },
+      }}
+      onClick={() => {
+        if (currentMainCont.value !== "settingsCont") {
+          dispatch(
+            CurrentMainContActions.changeCont({
+              value: "settingsCont",
+              id: "settingsCont",
+              name: "settingsCont",
+            })
+          );
+        }
       }}
     ></motion.i>
   );

@@ -15,12 +15,27 @@
   font-weight: 300;
   text-align: center;
 }
-.Register-wrapper .Register-form {
+.Register-wrapper .Register-form_Main {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+}
+.Register-wrapper .Register-form_Main .inputSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 3rem;
 }
-.Register-wrapper .Register-form input {
+.Register-wrapper .Register-form_Main .Section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+.Register-wrapper .Register-form_Main input {
   border: 0;
   outline: 0;
   padding: 1rem 3rem;
@@ -30,7 +45,7 @@
   font-size: 2rem;
   font-family: "Roboto Mono", monospace;
 }
-.Register-wrapper .Register-form button {
+.Register-wrapper .Register-form_Main button {
   border: 0;
   outline: 0;
   padding: 1rem 3rem;
@@ -45,7 +60,7 @@
   font-weight: 500;
   transition: background-color, color 0.3s ease;
 }
-.Register-wrapper .Register-form .buttonValid {
+.Register-wrapper .Register-form_Main .buttonValid {
   background-color: var(--primary-red);
   cursor: pointer;
   color: #333;

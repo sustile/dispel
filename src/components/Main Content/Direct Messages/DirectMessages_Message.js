@@ -92,7 +92,13 @@ function DirectMessages_Message(props) {
   async function profileClickHandler(e) {
     e.preventDefault();
     let target = e.target.closest(".profileTrigger");
-    if (!target) return;
+    let userId = props.data.from;
+    if (!target) {
+      target = e.target.closest(".profileTriggerReply");
+      if (!target) return;
+      userId = props.reply.userId;
+    }
+
     e.pageX + 150 > window.innerWidth
       ? setX(`${window.innerWidth - 180}px`)
       : setX(`${e.pageX}px`);
@@ -101,7 +107,7 @@ function DirectMessages_Message(props) {
       : setY(`${e.pageY}px`);
 
     let { data } = await axios.post(`${CONSTANTS.ip}/api/getUserBasicData`, {
-      id: props.data.from,
+      id: userId,
     });
 
     setUserProfileData({
@@ -190,8 +196,20 @@ function DirectMessages_Message(props) {
       {props.data.type.includes("reply") && (
         <div className="DirectMessages-reply-Cont">
           <i class="ph-arrow-elbow-left-down-bold"></i>
-          <img src={`/Images/${props.reply.image}`} />
-          <h2>{props.reply.name}</h2>
+          <img
+            src={`/Images/${props.reply.image}`}
+            className="profileTriggerReply"
+          />
+          <h2
+            style={
+              props.reply.userId === USERDATA.id
+                ? { color: "#84a59d" }
+                : { color: "#9f85ff" }
+            }
+            className="profileTriggerReply"
+          >
+            {props.reply.name}
+          </h2>
           <span>
             {props.reply.replyMessage.length > 200
               ? "File"
@@ -201,7 +219,16 @@ function DirectMessages_Message(props) {
       )}
       <div className="DirectMessagesBody-Message_Details">
         <img src={`/Images/${props.data.image}`} className="profileTrigger" />
-        <h2 className="profileTrigger">{props.data.name}</h2>
+        <h2
+          className="profileTrigger"
+          style={
+            props.data.from === USERDATA.id
+              ? { color: "#84a59d" }
+              : { color: "#9f85ff" }
+          }
+        >
+          {props.data.name}
+        </h2>
         <span>{dateString}</span>
       </div>
       <div className="DirectMessagesBody-Message_Body">
@@ -328,17 +355,20 @@ function DirectMessages_Message(props) {
               left: x,
             }}
             initial={{
-              scale: 0,
+              scale: 0.5,
+              opacity: 0,
             }}
             animate={{
               scale: 1,
+              opacity: 1,
               transition: {
                 type: "spring",
                 duration: 0.2,
               },
             }}
             exit={{
-              scale: 0,
+              scale: 0.5,
+              opacity: 0,
               transition: {
                 type: "spring",
                 duration: 0.2,
@@ -381,17 +411,20 @@ function DirectMessages_Message(props) {
               left: x,
             }}
             initial={{
-              scale: 0,
+              scale: 0.5,
+              opacity: 0,
             }}
             animate={{
               scale: 1,
+              opacity: 1,
               transition: {
                 type: "spring",
                 duration: 0.2,
               },
             }}
             exit={{
-              scale: 0,
+              scale: 0.5,
+              opacity: 0,
               transition: {
                 type: "spring",
                 duration: 0.2,

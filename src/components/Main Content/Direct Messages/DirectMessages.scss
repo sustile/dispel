@@ -229,17 +229,24 @@
           flex-direction: column;
           justify-content: center;
           align-items: flex-start;
-          gap: 0.5rem;
-          margin-left: 5rem;
+          gap: 1rem;
+          margin-left: 7rem;
+          margin-top: 0.5rem;
           span {
             color: var(--primary-green-accent);
             font-size: 1.8rem;
+            width: 20rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
           }
 
           p {
             color: #ddd;
             font-size: 1.3rem;
             font-weight: 800;
+            width: 20rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
           }
         }
 
@@ -271,8 +278,8 @@
 
       &_Details {
         display: flex;
+        // flex-direction: row-reverse;
         align-items: center;
-        justify-content: flex-start;
         gap: 1rem;
 
         img {
@@ -297,27 +304,19 @@
           color: #ddd;
           font-size: 1.2rem;
           font-weight: 500;
-          margin-left: 2rem;
+          margin: 0 2rem;
         }
-
-        //p {
-        //  span{
-        //    color: #ddd;
-        //    padding: 0 .5rem;
-        //    font-size: 2rem;
-        //  }
-        //  color: var(--primary-blue);
-        //  font-size: 1.3rem;
-        //  transform: translateY(0.1rem);
-        //}
       }
 
       &_Body {
+        display: flex;
+        align-items: center;
+        // justify-content: flex-end;
         p {
           color: #ddd;
           font-size: 1.3rem;
           font-weight: 500;
-          margin-left: 5.2rem;
+          margin: 0 5.2rem;
 
           a {
             color: var(--primary-red);
@@ -366,6 +365,7 @@
           justify-content: center;
           align-items: center;
           gap: 1rem;
+          width: 100%;
           .editMessageInput {
             background-color: #333;
             outline: 0;
@@ -435,65 +435,96 @@
         width: 95%;
         border: 0;
         outline: 0;
-        padding: 1.2rem 3rem;
-        border-radius: 2rem;
-        background-color: #333;
+        // padding: 1.2rem 3rem;
+        // border-radius: 2rem;
+        // background-color: #333;
         transition: all 0.2s ease-in-out;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        // flex-direction: column;
+        justify-content: space-between;
         align-items: center;
         gap: 1rem;
 
-        .ReplyCont {
-          width: 100%;
-          background-color: rgb(31, 31, 31);
-          padding: 0.5rem 2rem;
-          border-radius: 1rem;
+        &-primary {
           display: flex;
-          justify-content: space-between;
+          flex-direction: column;
+          justify-content: center;
           align-items: center;
-          gap: 5rem;
+          gap: 1rem;
+          background-color: rgb(38, 38, 38);
+          transition: all 0.2s ease-in-out;
+          width: 100%;
+          padding: 1.2rem 3rem;
+          border-radius: 2rem;
+          .ReplyCont {
+            width: 100%;
+            background-color: rgb(31, 31, 31);
+            padding: 0.5rem 2rem;
+            border-radius: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5rem;
 
-          span {
-            color: #ddd;
-            font-size: 1.5rem;
+            span {
+              color: #ddd;
+              font-size: 1.5rem;
+            }
+
+            i {
+              color: var(--primary-green-accent);
+              font-size: 1.8rem;
+              cursor: pointer;
+              background-color: #333;
+              padding: 0.5rem;
+              border-radius: 50%;
+            }
           }
 
-          i {
-            color: var(--primary-green-accent);
-            font-size: 1.8rem;
-            cursor: pointer;
-            background-color: #333;
-            padding: 0.5rem;
-            border-radius: 50%;
+          .inputCont {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            input {
+              color: #ddd;
+              font-weight: 600;
+              font-family: "Roboto Mono", monospace;
+              font-size: 1.6rem;
+              transition: all 0.2s ease-in-out;
+              border: 0;
+              outline: 0;
+              width: 100%;
+              background-color: transparent;
+            }
           }
         }
 
-        .inputCont {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          input {
-            color: #ddd;
-            font-weight: 600;
-            font-family: "Roboto Mono", monospace;
-            font-size: 1.6rem;
-            transition: all 0.2s ease-in-out;
-            border: 0;
-            outline: 0;
-            width: 100%;
-            background-color: transparent;
-          }
+        .imageBtn {
+          background-color: rgb(34, 34, 34);
+          color: var(--primary-green-accent);
+          border-radius: 1rem;
+          font-size: 3rem;
+          padding: 0.7rem 2rem;
+          cursor: pointer;
+          // transform: scale(2.2);
+        }
 
-          i {
+        button {
+          background-color: transparent;
+          outline: 0;
+          border: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .submitBtn {
             background-color: rgb(34, 34, 34);
             color: var(--primary-green-accent);
             border-radius: 1rem;
-            padding: 0.4rem;
+            font-size: 3rem;
+            padding: 0.7rem 2rem;
             cursor: pointer;
-            transform: scale(2.2);
           }
         }
       }

@@ -140,78 +140,84 @@ function Register() {
       >
         REGISTER
       </motion.h2>
-      <form className="Register-form" onSubmit={formHandler}>
-        <motion.input
-          type="email"
-          placeholder="Email"
-          required
-          maxLength="30"
-          onChange={emailChangeHandler}
-          value={formState.email}
-          whileFocus={
-            formState.emailIsValid
-              ? {
-                  boxShadow: "0 0 0 0.5rem var(--primary-green)",
-                }
-              : {
-                  boxShadow: "0 0 0 0.5rem var(--secondary-red)",
-                }
-          }
-        />
-        <motion.input
-          type="text"
-          placeholder="Name"
-          required
-          maxLength="30"
-          minLength="2"
-          onChange={nameChangeHandler}
-          value={formState.name}
-          whileFocus={
-            formState.nameIsValid
-              ? {
-                  boxShadow: "0 0 0 0.5rem var(--primary-green)",
-                }
-              : {
-                  boxShadow: "0 0 0 0.5rem var(--secondary-red)",
-                }
-          }
-        />
-        <motion.input
-          type="password"
-          placeholder="Password"
-          required
-          maxLength="30"
-          minLength="6"
-          onChange={passChangeHandler}
-          value={formState.pass}
-          whileFocus={
-            formState.passIsValid
-              ? {
-                  boxShadow: "0 0 0 0.5rem var(--primary-green)",
-                }
-              : {
-                  boxShadow: "0 0 0 0.5rem var(--secondary-red)",
-                }
-          }
-        />
-        <motion.input
-          type="password"
-          placeholder="Confirm Password"
-          required
-          maxLength="30"
-          minLength="6"
-          onChange={confirmPassChangeHandler}
-          value={formState.confirmPass}
-          whileFocus={
-            formState.confirmPassIsValid
-              ? {
-                  boxShadow: "0 0 0 0.5rem var(--primary-green)",
-                }
-              : {
-                  boxShadow: "0 0 0 0.5rem var(--secondary-red)",
-                }
-          }
-        />
+      <form className="Register-form_Main" onSubmit={formHandler}>
+        <div className="inputSection">
+          <div className="Name-Email-Section Section">
+            <motion.input
+              type="email"
+              placeholder="Email"
+              required
+              maxLength="30"
+              onChange={emailChangeHandler}
+              value={formState.email}
+              whileFocus={
+                formState.emailIsValid
+                  ? {
+                      boxShadow: "0 0 0 0.5rem var(--primary-green)",
+                    }
+                  : {
+                      boxShadow: "0 0 0 0.5rem var(--secondary-red)",
+                    }
+              }
+            />
+            <motion.input
+              type="text"
+              placeholder="Name"
+              required
+              maxLength="30"
+              minLength="2"
+              onChange={nameChangeHandler}
+              value={formState.name}
+              whileFocus={
+                formState.nameIsValid
+                  ? {
+                      boxShadow: "0 0 0 0.5rem var(--primary-green)",
+                    }
+                  : {
+                      boxShadow: "0 0 0 0.5rem var(--secondary-red)",
+                    }
+              }
+            />
+          </div>
+          <div className="Password-Section Section">
+            <motion.input
+              type="password"
+              placeholder="Password"
+              required
+              maxLength="30"
+              minLength="6"
+              onChange={passChangeHandler}
+              value={formState.pass}
+              whileFocus={
+                formState.passIsValid
+                  ? {
+                      boxShadow: "0 0 0 0.5rem var(--primary-green)",
+                    }
+                  : {
+                      boxShadow: "0 0 0 0.5rem var(--secondary-red)",
+                    }
+              }
+            />
+            <motion.input
+              type="password"
+              placeholder="Confirm Password"
+              required
+              maxLength="30"
+              minLength="6"
+              onChange={confirmPassChangeHandler}
+              value={formState.confirmPass}
+              whileFocus={
+                formState.confirmPassIsValid
+                  ? {
+                      boxShadow: "0 0 0 0.5rem var(--primary-green)",
+                    }
+                  : {
+                      boxShadow: "0 0 0 0.5rem var(--secondary-red)",
+                    }
+              }
+            />
+          </div>
+        </div>
         <motion.button
           type="submit"
           className={formState.formIsValid ? "buttonValid" : ""}

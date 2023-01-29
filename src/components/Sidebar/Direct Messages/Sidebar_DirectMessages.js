@@ -5,7 +5,10 @@ import "./Sidebar_DirectMessages.css";
 function Sidebar_DirectMessages(props) {
   return (
     <div className="DirectMessages_Sidebar">
-      <Sidebar_DirectMessages_Main closeSidebar={props.closeSidebar} />
+      <Sidebar_DirectMessages_Main
+        closeSidebar={props.closeSidebar}
+        vcPeer={props.vcPeer}
+      />
     </div>
   );
 }

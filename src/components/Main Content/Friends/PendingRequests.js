@@ -1,27 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  incomingRequestsAction,
+  outgoingRequestsAction,
+  notificationsAction,
+} from "./../../Store/store";
 
 function PendingRequests(props) {
   const CONSTANTS = useSelector((state) => state.CONSTANTS);
-  let [renderDataIncoming, setRenderDataIncoming] = useState([]);
-  let [renderDataOutgoing, setRenderDataOutgoing] = useState([]);
-  let [changeTrigger, setChangeTrigger] = useState(false);
+  let incoming = useSelector((state) => state.incomingRequests);
+  let outgoing = useSelector((state) => state.outgoingRequests);
+  let socket = props.socket;
+  // let [renderDataIncoming, setRenderDataIncoming] = useState(incoming);
+  // let [renderDataOutgoing, setRenderDataOutgoing] = useState(outgoing);
+  // let [changeTrigger, setChangeTrigger] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      let data = await axios.get(`${CONSTANTS.ip}/api/getAllPendingRequests`);
-      if (data.data.status === "ok") {
-        setRenderDataIncoming(data.data.incoming);
-        setRenderDataOutgoing(data.data.outgoing);
-      }
-    })();
-  }, [changeTrigger]);
+  // useEffect(() => {
+  //   (async () => {
+  //     let data = await axios.get(`${CONSTANTS.ip}/api/getAllPendingRequests`);
+  //     if (data.data.status === "ok") {
+  //       setRenderDataIncoming((prev) => [...prev, ...data.data.incoming]);
+  //       setRenderDataOutgoing((prev) => [...prev, ...data.data.outgoing]);
+  //     }
+  //   })();
+  // }, [changeTrigger]);
 
-  function changeTriggerFunction() {
-    setChangeTrigger((el) => !el);
-  }
+  // function changeTriggerFunction() {
+  //   setChangeTrigger((el) => !el);
+  // }
 
   return (
     <div className="Friends-OnlineFriends_Master Friends-MasterCont">
@@ -29,25 +37,27 @@ function PendingRequests(props) {
         <h2>Pending Requests</h2>
       </div>
       <div className="Friends-MasterCont_RenderCont">
-        {renderDataIncoming.map((el) => {
+        {incoming.map((el) => {
           return (
             <Friends_User
               data={el}
+              socket={socket}
               type={"Incoming"}
-              change={changeTriggerFunction}
+              // change={changeTriggerFunction}
             />
           );
         })}
-        {renderDataOutgoing.map((el) => {
+        {outgoing.map((el) => {
           return (
             <Friends_User
               data={el}
+              socket={socket}
               type={"Outgoing"}
-              change={changeTriggerFunction}
+              // change={changeTriggerFunction}
             />
           );
         })}
-        {renderDataIncoming.length === 0 && renderDataOutgoing.length == 0 && (
+        {incoming.length === 0 && outgoing.length == 0 && (
           <h2 className="NoData">You have no Pending Friend Requests</h2>
         )}
       </div>
@@ -58,12 +68,15 @@ function PendingRequests(props) {
 function Friends_User(props) {
   let userId = props.data;
   let type = props.type;
-  let setChangeTrigger = props.change;
+  // let setChangeTrigger = props.change;
   let [renderData, setRenderData] = useState({
     name: "",
     image: "",
   });
+  let socket = props.socket;
   const CONSTANTS = useSelector((state) => state.CONSTANTS);
+  const dispatch = useDispatch();
+  let USERDATA = useSelector((state) => state.USERDATA);
 
   async function acceptHandler() {
     let result = await axios.post(`${CONSTANTS.ip}/api/acceptRequest`, {
@@ -71,7 +84,19 @@ function Friends_User(props) {
     });
     if (result.data.status === "ok") {
       // success popup
-      setChangeTrigger();
+      // setChangeTrigger();
+      dispatch(incomingRequestsAction.removeRequest(userId));
+      socket.emit("standalone-friend-request-verdict", {
+        to: userId,
+        from: USERDATA.id,
+        type: "ACCEPTED",
+      });
+      dispatch(
+        notificationsAction.setNotification({
+          type: "ok",
+          message: `You Accepted ${renderData.name} Friend Request`,
+        })
+      );
     }
   }
 
@@ -82,7 +107,22 @@ function Friends_User(props) {
     });
     if (result.data.status === "ok") {
       // success popup
-      setChangeTrigger();
+      // setChangeTrigger();
+      if (type === "Incoming") {
+        dispatch(incomingRequestsAction.removeRequest(userId));
+        socket.emit("standalone-friend-request-verdict", {
+          to: userId,
+          from: USERDATA.id,
+          type: "INCOMING_REJECTED",
+        });
+      } else {
+        dispatch(outgoingRequestsAction.removeRequest(userId));
+        socket.emit("standalone-friend-request-verdict", {
+          to: userId,
+          from: USERDATA.id,
+          type: "OUTGOING_REJECTED",
+        });
+      }
     }
   }
 

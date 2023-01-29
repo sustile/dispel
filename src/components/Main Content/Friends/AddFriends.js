@@ -2,15 +2,41 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { outgoingRequestsAction, notificationsAction } from "../../Store/store";
 
 function AddFriends(props) {
   let inputRef = useRef();
+  let socket = props.socket;
+  let dispatch = useDispatch();
   const CONSTANTS = useSelector((state) => state.CONSTANTS);
+  const USERDATA = useSelector((state) => state.USERDATA);
   async function submitHandler(e) {
     e.preventDefault();
     let value = String(inputRef.current.value).trim();
     if (!value) return;
+
+    let data2 = await axios.get(`${CONSTANTS.ip}/api/getAllFriends`);
+
+    if (data2.data.status === "ok") {
+      if (data2.data.friends.includes(value)) {
+        dispatch(
+          notificationsAction.setNotification({
+            type: "error",
+            message: `User is Already in Your Friends List`,
+          })
+        );
+        return;
+      }
+    } else {
+      dispatch(
+        notificationsAction.setNotification({
+          type: "error",
+          message: `Something Went Wrong`,
+        })
+      );
+      return;
+    }
 
     let data = await axios.post(`${CONSTANTS.ip}/api/addFriends`, {
       id: value,
@@ -18,6 +44,17 @@ function AddFriends(props) {
     if (data.data.status === "ok") {
       // successfully sent request
       inputRef.current.value = "";
+      socket.emit("standalone-friend-request", {
+        from: USERDATA.id,
+        to: value,
+      });
+      dispatch(outgoingRequestsAction.outgoing(value));
+      dispatch(
+        notificationsAction.setNotification({
+          type: "ok",
+          message: `Request Sent Successfully`,
+        })
+      );
     }
   }
 

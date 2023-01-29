@@ -69,6 +69,9 @@ const allDms = createSlice({
     loadDMs(state, action) {
       return [...action.payload];
     },
+    addDm(state, action) {
+      return [...state, action.payload];
+    },
   },
 });
 
@@ -256,10 +259,19 @@ const currentCallStatus = createSlice({
     callObj: null,
     currentCallCont: null,
     callList: [],
+    waiting: {
+      status: false,
+      name: "",
+      room: "",
+    },
   },
   reducers: {
     loadObj(state, action) {
       return action.payload;
+    },
+
+    setWaiting(state, action) {
+      return { ...state, waiting: action.payload };
     },
 
     addUsers(state, action) {
@@ -321,6 +333,11 @@ const currentCallStatus = createSlice({
         callObj: null,
         currentCallCont: null,
         callList: [],
+        waiting: {
+          status: false,
+          name: "",
+          room: "",
+        },
       };
     },
   },
@@ -351,6 +368,101 @@ const spinner = createSlice({
   },
 });
 
+const IOdevices = createSlice({
+  name: "IOdevices",
+  initialState: {
+    output: "default",
+    outputDeviceName: "Default",
+    outputVolume: 0.5,
+    input: "default",
+    inputDeviceName: "Default",
+    inputVolume: 0.5,
+  },
+  reducers: {
+    changeOutput(state, action) {
+      return { ...state, ...action.payload };
+    },
+    changeInput(state, action) {
+      return { ...state, ...action.payload };
+    },
+    changeOutputVolume(state, action) {
+      return { ...state, outputVolume: action.payload };
+    },
+    changeInputVolume(state, action) {
+      return { ...state, inputVolume: action.payload };
+    },
+  },
+});
+
+const online = createSlice({
+  name: "online",
+  initialState: [],
+  reducers: {
+    setOnline(state, action) {
+      if (!state.includes(action.payload)) {
+        return [...state, action.payload];
+      }
+    },
+
+    setOffline(state, action) {
+      return state.filter((el) => el !== action.payload);
+    },
+  },
+});
+
+const incomingRequests = createSlice({
+  name: "incomingRequests",
+  initialState: [],
+  reducers: {
+    setData(state, action) {
+      return action.payload;
+    },
+    incoming(state, action) {
+      return [...state, action.payload];
+    },
+    removeRequest(state, action) {
+      return state.filter((el) => el !== action.payload);
+    },
+  },
+});
+
+const outgoingRequests = createSlice({
+  name: "outgoingRequests",
+  initialState: [],
+  reducers: {
+    setData(state, action) {
+      return action.payload;
+    },
+    outgoing(state, action) {
+      return [...state, action.payload];
+    },
+    removeRequest(state, action) {
+      return state.filter((el) => el !== action.payload);
+    },
+  },
+});
+
+const notifications = createSlice({
+  name: "notifications",
+  initialState: {
+    type: "",
+    message: "",
+    ongoing: false,
+  },
+  reducers: {
+    setNotification(state, action) {
+      if (!state.ongoing) {
+        return { ...action.payload, ongoing: true };
+      }
+    },
+    closeNotifications(state, action) {
+      if (state.ongoing) {
+        return { type: "", message: "", ongoing: false };
+      }
+    },
+  },
+});
+
 const store = configureStore({
   reducer: {
     controls: controlsOptions.reducer,
@@ -363,6 +475,11 @@ const store = configureStore({
     currentCallStatus: currentCallStatus.reducer,
     contextMenu: ContextMenu.reducer,
     spinner: spinner.reducer,
+    IOdevices: IOdevices.reducer,
+    online: online.reducer,
+    incomingRequests: incomingRequests.reducer,
+    outgoingRequests: outgoingRequests.reducer,
+    notifications: notifications.reducer,
   },
 });
 
@@ -376,5 +493,10 @@ export const dmMessagesAction = allDmMessages.actions;
 export const currentCallStatusAction = currentCallStatus.actions;
 export const ContextMenuActions = ContextMenu.actions;
 export const spinnerActions = spinner.actions;
+export const IOdevicesActions = IOdevices.actions;
+export const onlineActions = online.actions;
+export const incomingRequestsAction = incomingRequests.actions;
+export const outgoingRequestsAction = outgoingRequests.actions;
+export const notificationsAction = notifications.actions;
 
 export default store;

@@ -2,7 +2,12 @@ import React, { useEffect, useMemo } from "react";
 import { dmMessagesAction } from "./../Store/store";
 import { useSelector, useDispatch } from "react-redux";
 
-import { currentCallStatusAction } from "./../Store/store";
+import {
+  currentCallStatusAction,
+  onlineActions,
+  incomingRequestsAction,
+  outgoingRequestsAction,
+} from "./../Store/store";
 import { useState } from "react";
 import { useRef } from "react";
 
@@ -15,6 +20,8 @@ function GlobalEventHandlers(props) {
   let USERDATA = useSelector((state) => state.USERDATA);
   let currentCallStatus = useSelector((state) => state.currentCallStatus);
   let controlsOptions = useSelector((state) => state.controls);
+
+  let IOdevices = useSelector((state) => state.IOdevices);
 
   let currentMainContRef = useRef();
   let VOICESTREAMref = useRef();
@@ -43,12 +50,13 @@ function GlobalEventHandlers(props) {
         audio: {
           noiseSuppression: true,
           echoCancellation: true,
+          deviceId: IOdevices.input,
         },
       })
       .then((stream) => {
         setVoiceStream(stream);
       });
-  }, []);
+  }, [IOdevices.input]);
 
   useEffect(() => {
     vcPeer.on("call", (incoming) => {
@@ -72,6 +80,11 @@ function GlobalEventHandlers(props) {
                 },
                 { id: "test", stream: userVideoStream },
               ],
+              waiting: {
+                status: false,
+                name: "",
+                room: "",
+              },
             })
           );
 
@@ -90,6 +103,11 @@ function GlobalEventHandlers(props) {
             callObj: null,
             currentCallCont: data.room,
             callList: [],
+            waiting: {
+              status: true,
+              name: data.name,
+              room: data.room,
+            },
           })
         );
 
@@ -113,6 +131,11 @@ function GlobalEventHandlers(props) {
                     stream: userVideoStream,
                   },
                 ],
+                waiting: {
+                  status: false,
+                  name: "",
+                  room: "",
+                },
               })
             );
           }
@@ -211,7 +234,46 @@ function GlobalEventHandlers(props) {
         dispatch(currentCallStatusAction.closeCall());
       }
     });
+
+    socket.on("user-offline", (id) => {
+      dispatch(onlineActions.setOffline(id));
+    });
+
+    socket.on("friend-request-verdict", (data) => {
+      if (data.to === USERDATA.id) {
+        //OUTOGOING ACCEPTED
+        if (data.type === "ACCEPTED") {
+          dispatch(outgoingRequestsAction.removeRequest(data.from));
+        } else if (data.type === "INCOMING_REJECTED") {
+          dispatch(outgoingRequestsAction.removeRequest(data.from));
+        } else if (data.type === "OUTGOING_REJECTED") {
+          dispatch(incomingRequestsAction.removeRequest(data.from));
+        }
+      }
+    });
+
+    socket.on("friend-request", (data) => {
+      if (data.to === USERDATA.id) {
+        dispatch(incomingRequestsAction.incoming(data.from));
+      }
+    });
   }, []);
+
+  useEffect(() => {
+    if (vcPeer) {
+      vcPeer.on("connection", (conn) => {
+        conn.on("data", (data) => {
+          if (data.type === "checkOnline") {
+            dispatch(onlineActions.setOnline(data.id));
+            conn.send({
+              type: "yesOnline",
+              id: USERDATA.id,
+            });
+          }
+        });
+      });
+    }
+  }, [vcPeer]);
 
   return <div className="GlobalEventHandlers"></div>;
 }
