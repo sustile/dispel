@@ -3,8 +3,9 @@
 REVAMP CALL SYSTEM
 ✔ WAITING LOBBY @done(23-01-29 22:07)
 ✔ BUG : call popup closes automatically for some reason .Check the timeout @done(23-01-29 22:21)
-☐ try to make it so that the call can be answered from anywhere instead of only the dm page
+✔ try to make it so that the call can be answered from anywhere instead of only the dm page @done(23-02-01 15:51)
 ☐ any way to see if someone is already in a waiting lobby
+✔ make open chat btn available on all screen(btn is there but it doesnt work) @done(23-02-03 20:59)
 
 ENHANCEMENTS
 ☐ save user data to cache using redis to reduce the user checking in verify middleware

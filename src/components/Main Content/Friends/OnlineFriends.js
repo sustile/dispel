@@ -3,11 +3,16 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 import useStandaloneOnlineHandler from "../useStandaloneOnlineHandler";
 import { useSelector, useDispatch } from "react-redux";
-import { onlineActions } from "./../../Store/store";
+import {
+  onlineActions,
+  CurrentMainContActions,
+  AllDmsActions,
+} from "./../../Store/store";
 import axios from "axios";
 
 function OnlineFriends(props) {
   let vcPeer = props.vcPeer;
+  let socket = props.socket;
   let onlineList = useSelector((state) => state.online);
   let dispatch = useDispatch();
   let CONSTANTS = useSelector((state) => state.CONSTANTS);
@@ -19,7 +24,7 @@ function OnlineFriends(props) {
       </div>
       <div className="Friends-MasterCont_RenderCont">
         {onlineList.map((el) => {
-          return <Friends_User id={el} />;
+          return <Friends_User id={el} socket={socket} />;
         })}
       </div>
     </div>
@@ -31,7 +36,11 @@ function Friends_User(props) {
     name: "",
     image: "default.png",
   });
+  let dispatch = useDispatch();
+  let userId = props.id;
+  let socket = props.socket;
   let CONSTANTS = useSelector((state) => state.CONSTANTS);
+  const dmsData = useSelector((state) => state.allDms);
   useEffect(() => {
     (async () => {
       let user = await axios.post(`${CONSTANTS.ip}/api/getUserBasicData`, {
@@ -46,6 +55,43 @@ function Friends_User(props) {
       }
     })();
   }, []);
+
+  async function clickHandler() {
+    let x = dmsData.filter((el) => el.toId === userId);
+    if (x.length !== 0) {
+      // OPEN DM
+      x = x[0];
+      dispatch(
+        CurrentMainContActions.changeCont({
+          value: "dmCont",
+          id: x.dmId,
+          name: x.to,
+        })
+      );
+      return;
+    }
+
+    let lol = await axios.post(`${CONSTANTS.ip}/api/addNewDm`, {
+      person2: userId,
+    });
+    if (lol.data.status === "ok") {
+      let dm = await axios.post(`${CONSTANTS.ip}/api/getDm`, {
+        id: lol.data.dmId,
+      });
+      if (dm.data.status === "ok") {
+        dispatch(AllDmsActions.addDm(dm.data.data));
+        socket.emit("join-room", lol.data.dmId);
+        dispatch(
+          CurrentMainContActions.changeCont({
+            value: "dmCont",
+            id: lol.data.dmId,
+            name: dm.data.data.to,
+          })
+        );
+      }
+    }
+  }
+
   return (
     <motion.div
       whileHover={{
@@ -75,6 +121,7 @@ function Friends_User(props) {
                 type: "spring",
               },
             }}
+            onClick={clickHandler}
             whileTap={{
               scale: 0.9,
               transition: {

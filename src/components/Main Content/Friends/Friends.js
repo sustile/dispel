@@ -150,7 +150,9 @@ function Friends(props) {
           Add Friends
         </motion.button>
       </div>
-      {active === "online" && <OnlineFriends vcPeer={props.vcPeer} />}
+      {active === "online" && (
+        <OnlineFriends vcPeer={props.vcPeer} socket={socket} />
+      )}
       {active === "all" && <AllFriends socket={socket} vcPeer={props.vcPeer} />}
       {active === "pending" && <PendingRequests socket={socket} />}
       {active === "addfriends" && <AddFriends socket={socket} />}

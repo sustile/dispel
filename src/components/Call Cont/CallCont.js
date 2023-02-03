@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { useSelector, useDispatch } from "react-redux";
 import { currentCallStatusAction } from "../Store/store";
+import { current } from "@reduxjs/toolkit";
 
 function CallCont(props) {
   let socket = props.socket;
@@ -62,12 +63,17 @@ function CallCont(props) {
           {currentCallStatus.waiting.status &&
             `Waiting for Connection from ${currentCallStatus.waiting.name}`}
         </span>
+        {/* <span className="activeCallText">Waiting in the Lobby</span> */}
         {currentCallStatus.status && (
           <div className="Call_details-User">
             <img src={`/Images/${activeCalldata.image}`} />
             <span>{activeCalldata.name}</span>
           </div>
         )}
+        {/* <div className="Call_details-User">
+          <img src={`/Images/default.png`} />
+          <span>Systile</span>
+        </div> */}
 
         {currentCallStatus.waiting.status && (
           <lord-icon
@@ -78,32 +84,34 @@ function CallCont(props) {
           ></lord-icon>
         )}
       </div>
-      <motion.button
-        className="DirectMessagesCallLeave"
-        onClick={clickHandler}
-        whileHover={
-          !currentCallStatus.status
-            ? {
-                scale: 1.2,
-                transition: {
-                  duration: 0.5,
-                  type: "spring",
-                },
-              }
-            : ""
-        }
-        whileTap={{
-          scale: 0.9,
-          transition: {
-            duration: 0.1,
-            type: "spring",
-            damping: 25,
-            stiffness: 500,
-          },
-        }}
-      >
-        <motion.i className="ph-phone-slash-bold "></motion.i>
-      </motion.button>
+      {(currentCallStatus.status || currentCallStatus.waiting.status) && (
+        <motion.button
+          className="DirectMessagesCallLeave"
+          onClick={clickHandler}
+          whileHover={
+            !currentCallStatus.status
+              ? {
+                  scale: 1.2,
+                  transition: {
+                    duration: 0.5,
+                    type: "spring",
+                  },
+                }
+              : ""
+          }
+          whileTap={{
+            scale: 0.9,
+            transition: {
+              duration: 0.1,
+              type: "spring",
+              damping: 25,
+              stiffness: 500,
+            },
+          }}
+        >
+          <motion.i className="ph-phone-slash-bold "></motion.i>
+        </motion.button>
+      )}
     </motion.div>
   );
 }

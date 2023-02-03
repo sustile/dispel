@@ -267,11 +267,14 @@ const currentCallStatus = createSlice({
   },
   reducers: {
     loadObj(state, action) {
-      return action.payload;
+      return { ...state, ...action.payload };
     },
 
     setWaiting(state, action) {
       return { ...state, waiting: action.payload };
+    },
+    setCont(state, action) {
+      return { ...state, currentCallCont: action.payload };
     },
 
     addUsers(state, action) {

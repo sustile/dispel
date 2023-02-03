@@ -72,7 +72,8 @@ function GlobalEventHandlers(props) {
             currentCallStatusAction.loadObj({
               status: true,
               callObj: call,
-              currentCallCont: currentMainContRef.current.id,
+              // currentCallCont: currentMainContRef.current.id,
+              currentCallCont: currentCallStatusRef.current.currentCallCont,
               callList: [
                 {
                   id: USERDATA.id,
@@ -88,59 +89,62 @@ function GlobalEventHandlers(props) {
             })
           );
 
-          socket.emit("getCallData", currentMainContRef.current.id);
+          socket.emit(
+            "getCallData",
+            currentCallStatusRef.current.currentCallCont
+          );
         }
       });
     });
 
     socket.on("joined-call", (data) => {
-      if (data.room === currentMainContRef.current.id) {
-        call = vcPeer.call(data.id, VOICESTREAMref.current);
+      // if (data.room === currentMainContRef.current.id) {
+      call = vcPeer.call(data.id, VOICESTREAMref.current);
 
-        dispatch(
-          currentCallStatusAction.loadObj({
-            status: false,
-            callObj: null,
-            currentCallCont: data.room,
-            callList: [],
-            waiting: {
+      dispatch(
+        currentCallStatusAction.loadObj({
+          status: false,
+          callObj: null,
+          currentCallCont: data.room,
+          callList: [],
+          waiting: {
+            status: true,
+            name: data.name,
+            room: data.room,
+          },
+        })
+      );
+
+      call.on("stream", (userVideoStream) => {
+        if (currentCallStatusRef.current.status) {
+        } else {
+          dispatch(
+            currentCallStatusAction.loadObj({
               status: true,
-              name: data.name,
-              room: data.room,
-            },
-          })
-        );
-
-        call.on("stream", (userVideoStream) => {
-          if (currentCallStatusRef.current.status) {
-          } else {
-            dispatch(
-              currentCallStatusAction.loadObj({
-                status: true,
-                callObj: call,
-                currentCallCont: currentMainContRef.current.id,
-                callList: [
-                  {
-                    id: USERDATA.id,
-                    stream: VOICESTREAMref.current,
-                  },
-                  {
-                    id: data.id,
-                    name: data.name,
-                    image: data.image,
-                    stream: userVideoStream,
-                  },
-                ],
-                waiting: {
-                  status: false,
-                  name: "",
-                  room: "",
+              callObj: call,
+              currentCallCont: currentMainContRef.current.id,
+              callList: [
+                {
+                  id: USERDATA.id,
+                  stream: VOICESTREAMref.current,
                 },
-              })
-            );
-          }
-        });
-      }
+                {
+                  id: data.id,
+                  name: data.name,
+                  image: data.image,
+                  stream: userVideoStream,
+                },
+              ],
+              waiting: {
+                status: false,
+                name: "",
+                room: "",
+              },
+            })
+          );
+        }
+      });
+      // }
     });
 
     socket.on("receive-message_dm", (data) => {

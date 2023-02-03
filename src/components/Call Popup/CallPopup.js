@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import "./CallPopup.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
+import { currentCallStatusAction } from "../Store/store";
 
 function CallPopup(props) {
   let vcPeer = props.vcPeer;
@@ -14,6 +15,7 @@ function CallPopup(props) {
     room: "",
   });
   let [initial, setInital] = useState(false);
+  let dispatch = useDispatch();
 
   let currentMainCont = useSelector((state) => state.currentMainCont);
   let USERDATA = useSelector((state) => state.USERDATA);
@@ -31,11 +33,14 @@ function CallPopup(props) {
 
   function attendHandler() {
     socket.emit("joined-call", {
-      room: currentMainCont.id,
+      room: displayData.room || currentMainCont.id,
       id: USERDATA.id,
       name: USERDATA.name,
       image: USERDATA.image,
     });
+    dispatch(
+      currentCallStatusAction.setCont(displayData.room || currentMainCont.id)
+    );
     setDisplayPopup(false);
     setDisplayData({
       name: "",
@@ -71,17 +76,6 @@ function CallPopup(props) {
             image: data.image,
           });
           setDisplayPopup(true);
-
-          // let timer = setTimeout(() => {
-          //   setDisplayPopup(false);
-          //   setDisplayData({
-          //     name: "",
-          //     image: "",
-          //   });
-          // }, 10 * 1000);
-          // return () => {
-          //   clearTimeout(timer);
-          // };
         }
         setInital(true);
       });

@@ -167,13 +167,16 @@ function DirectMessages(props) {
         );
         if (data.status === "ok") {
           if (data.result.length !== 0) {
+            let user;
             for (let el of data.result) {
-              let user = await axios.post(
-                `${CONSTANTS.ip}/api/getUserBasicData`,
-                {
-                  id: el.userId,
-                }
-              );
+              if (el.userId !== userData.id && !user) {
+                user = await axios.post(
+                  `${CONSTANTS.ip}/api/getUserBasicData`,
+                  {
+                    id: el.userId,
+                  }
+                );
+              }
               dispatch(
                 dmMessagesAction.addMessage({
                   objId: el._id,
@@ -181,8 +184,14 @@ function DirectMessages(props) {
                   type: el.type,
                   message: el.message,
                   from: el.userId,
-                  name: user.data.user.name,
-                  image: user.data.user.image,
+                  name:
+                    el.userId === userData.id
+                      ? userData.name
+                      : user.data.user.name,
+                  image:
+                    el.userId === userData.id
+                      ? userData.image
+                      : user.data.user.image,
                   createdAt: el.createdAt,
                   replyTo: el.replyTo,
                   replyMessage: el.replyMessage,
@@ -207,13 +216,16 @@ function DirectMessages(props) {
           );
           if (data.status === "ok") {
             if (data.result.length !== 0) {
+              let user;
               for (let el of data.result) {
-                let user = await axios.post(
-                  `${CONSTANTS.ip}/api/getUserBasicData`,
-                  {
-                    id: el.userId,
-                  }
-                );
+                if (el.userId !== userData.id && !user) {
+                  user = await axios.post(
+                    `${CONSTANTS.ip}/api/getUserBasicData`,
+                    {
+                      id: el.userId,
+                    }
+                  );
+                }
                 dispatch(
                   dmMessagesAction.addMessage({
                     objId: el._id,
@@ -221,8 +233,14 @@ function DirectMessages(props) {
                     type: el.type,
                     message: el.message,
                     from: el.userId,
-                    name: user.data.user.name,
-                    image: user.data.user.image,
+                    name:
+                      el.userId === userData.id
+                        ? userData.name
+                        : user.data.user.name,
+                    image:
+                      el.userId === userData.id
+                        ? userData.image
+                        : user.data.user.image,
                     createdAt: el.createdAt,
                     replyTo: el.replyTo,
                     replyMessage: el.replyMessage,
@@ -259,14 +277,14 @@ function DirectMessages(props) {
       if (x) {
         let final = [];
 
+        let user;
         for (let el of x.messages) {
           if (el.type.includes("reply")) {
-            let { data } = await axios.post(
-              `${CONSTANTS.ip}/api/getUserBasicData`,
-              {
+            if (el.replyTo !== userData.id && !user) {
+              user = await axios.post(`${CONSTANTS.ip}/api/getUserBasicData`, {
                 id: el.replyTo,
-              }
-            );
+              });
+            }
 
             let x = await axios.post(`${CONSTANTS.ip}/api/getMessageData`, {
               id: el.replyMessage,
@@ -275,8 +293,14 @@ function DirectMessages(props) {
             x = x.data.result[0];
 
             let y = {
-              image: data.user.image,
-              name: data.user.name,
+              image:
+                el.replyTo === userData.id
+                  ? userData.image
+                  : user.data.user.image,
+              name:
+                el.replyTo === userData.id
+                  ? userData.name
+                  : user.data.user.name,
               replyMessage: x.message,
               userId: x.userId,
               replyMessageId: x._id,
@@ -393,13 +417,16 @@ function DirectMessages(props) {
                 })
               );
 
+              let user;
               for (let el of data.result) {
-                let user = await axios.post(
-                  `${CONSTANTS.ip}/api/getUserBasicData`,
-                  {
-                    id: el.userId,
-                  }
-                );
+                if (el.userId !== userData.id && !user) {
+                  user = await axios.post(
+                    `${CONSTANTS.ip}/api/getUserBasicData`,
+                    {
+                      id: el.userId,
+                    }
+                  );
+                }
                 dispatch(
                   dmMessagesAction.addMessage({
                     objId: el._id,
@@ -407,8 +434,14 @@ function DirectMessages(props) {
                     dmId: props.data.id,
                     message: el.message,
                     from: el.userId,
-                    name: user.data.user.name,
-                    image: user.data.user.image,
+                    name:
+                      el.userId === userData.id
+                        ? userData.name
+                        : user.data.user.name,
+                    image:
+                      el.userId === userData.id
+                        ? userData.image
+                        : user.data.user.image,
                     createdAt: el.createdAt,
                     replyTo: el.replyTo,
                     replyMessage: el.replyMessage,
