@@ -267,7 +267,7 @@ const currentCallStatus = createSlice({
   },
   reducers: {
     loadObj(state, action) {
-      return { ...state, ...action.payload };
+      return action.payload;
     },
 
     setWaiting(state, action) {
@@ -275,6 +275,20 @@ const currentCallStatus = createSlice({
     },
     setCont(state, action) {
       return { ...state, currentCallCont: action.payload };
+    },
+
+    setLobby(state, action) {
+      return { ...state, lobbyDetails: action.payload };
+    },
+
+    clearLobby(state, action) {
+      return {
+        ...state,
+        lobbyDetails: {
+          status: false,
+          id: "",
+        },
+      };
     },
 
     addUsers(state, action) {

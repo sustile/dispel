@@ -159,4 +159,6 @@ router
 // GET DATA ABT AN INDIVIDUAL MESSAGE BASED ON MESSAGE ID
 router.route("/api/getMessageData").post(messageController.getMessageData);
 
+router.route("/api/checkUserExists").post(accountController.checkUserExists);
+
 module.exports = router;

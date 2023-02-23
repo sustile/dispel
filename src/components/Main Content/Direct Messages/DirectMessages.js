@@ -158,6 +158,7 @@ function DirectMessages(props) {
 
   useEffect(() => {
     (async () => {
+      // socket.emit("dm-call-data", currentCont.id);
       dispatch(spinnerActions.toggleSpinner(true));
 
       if (allDmMessages.length === 0) {

@@ -63,17 +63,21 @@ function CallCont(props) {
           {currentCallStatus.waiting.status &&
             `Waiting for Connection from ${currentCallStatus.waiting.name}`}
         </span>
-        {/* <span className="activeCallText">Waiting in the Lobby</span> */}
+        {/* {currentCallStatus.lobbyDetails.status && (
+          <span className="activeCallText">Waiting in the Lobby</span>
+        )} */}
         {currentCallStatus.status && (
           <div className="Call_details-User">
             <img src={`/Images/${activeCalldata.image}`} />
             <span>{activeCalldata.name}</span>
           </div>
         )}
-        {/* <div className="Call_details-User">
-          <img src={`/Images/default.png`} />
-          <span>Systile</span>
-        </div> */}
+        {/* {currentCallStatus.lobbyDetails.status && (
+          <div className="Call_details-User">
+            <img src={`/Images/default.png`} />
+            <span>trolo</span>
+          </div>
+        )} */}
 
         {currentCallStatus.waiting.status && (
           <lord-icon

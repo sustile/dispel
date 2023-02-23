@@ -11,23 +11,57 @@ import urlRegex from "url-regex";
 import { Buffer } from "buffer";
 import parse from "html-react-parser";
 
+async function replaceAsync(str, regex, asyncFn) {
+  const promises = [];
+  str.replace(regex, (match) => {
+    const promise = asyncFn(match);
+    promises.push(promise);
+  });
+  const data = await Promise.all(promises);
+  return str.replace(regex, (user) => {
+    if (data[0].status === "ok") {
+      return `<span className="userPing">@${data[0].name}</span>`;
+    }
+    data.shift();
+    return user;
+  });
+
+  // if (data.status === "ok") {
+  //   return `<span className="userPing">${data.name}</span>`;
+  // }
+  // return `<span className="userPing">${user}</span>`;
+}
+
 function DirectMessages_Message(props) {
   let date = new Date(props.data.createdAt);
   let setReply = props.setReply;
   let [linkthere, setLinkThere] = useState(false);
+  let [pingthere, setPingThere] = useState(false);
   let socket = props.socket;
   let [imageWindow, setImageWindow] = useState(false);
 
-  let message;
+  const CONSTANTS = useSelector((state) => state.CONSTANTS);
+  const currentMainCont = useSelector((state) => state.currentMainCont);
+  const USERDATA = useSelector((state) => state.USERDATA);
+  let [message, setMessage] = useState("");
+  // let message;
 
   if (!props.data.type.includes("image")) {
-    message = props.data.message.replace(
+    let x = props.data.message.replace(
       urlRegex({ strict: false }),
       function (url) {
         if (!linkthere) setLinkThere(true);
         return '<a href="' + url + '" target="_blank">' + url + "</a>";
       }
     );
+    replaceAsync(x, /@([A-Z])?([0-9])?\w+/g, async (user) => {
+      if (!pingthere) setPingThere(true);
+      // check whether user exists
+      let { data } = await axios.post(`${CONSTANTS.ip}/api/checkUserExists`, {
+        id: String(user).substring(1),
+      });
+      return data;
+    }).then((str) => setMessage(str));
   }
 
   let monthList = [
@@ -79,6 +113,7 @@ function DirectMessages_Message(props) {
       e.target.classList.contains("Backdrop")
     )
       return;
+    console.log("yes");
     e.pageX + 150 > window.innerWidth
       ? setX(`${window.innerWidth - 180}px`)
       : setX(`${e.pageX}px`);
@@ -86,7 +121,7 @@ function DirectMessages_Message(props) {
       ? setY(`${window.innerHeight - 220}px`)
       : setY(`${e.pageY}px`);
 
-    dispatch(ContextMenuActions.loadMenu(Id));
+    // dispatch(ContextMenuActions.loadMenu(Id));
   }
 
   async function profileClickHandler(e) {
@@ -137,9 +172,6 @@ function DirectMessages_Message(props) {
   let editInput = useRef();
   let [editInputVal, setEditInputVal] = useState(props.data.message);
   let [isEdit, setIsEdit] = useState(false);
-  const CONSTANTS = useSelector((state) => state.CONSTANTS);
-  const currentMainCont = useSelector((state) => state.currentMainCont);
-  const USERDATA = useSelector((state) => state.USERDATA);
 
   async function editFormHandler(e) {
     e.preventDefault();
@@ -154,7 +186,8 @@ function DirectMessages_Message(props) {
       message: editInputVal.trim(),
     });
     if (data.data.status === "ok") {
-      message = editInputVal.trim();
+      setMessage(editInputVal.trim());
+      // message = editInputVal.trim();
       data = data.data.obj;
       let final = {
         objId: data._id,
@@ -234,7 +267,7 @@ function DirectMessages_Message(props) {
       <div className="DirectMessagesBody-Message_Body">
         {isEdit ||
           (!String(props.data.type).includes("image") && (
-            <p>{linkthere ? parse(message) : message}</p>
+            <p>{linkthere || pingthere ? parse(message) : message}</p>
           ))}
         {String(props.data.type).includes("image") && (
           <React.Fragment>
@@ -403,7 +436,7 @@ function DirectMessages_Message(props) {
       </AnimatePresence>
 
       <AnimatePresence initial={false} exitBeforeEnter={true}>
-        {ContextMenu.id === Id && (
+        {/* {ContextMenu.id === Id && (
           <motion.div
             className="DirectMessages_MessageContextMenu"
             style={{
@@ -464,7 +497,7 @@ function DirectMessages_Message(props) {
               <span>Reply</span>
             </motion.div>
           </motion.div>
-        )}
+        )} */}
       </AnimatePresence>
     </motion.div>
   );

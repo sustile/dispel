@@ -321,6 +321,14 @@
           a {
             color: var(--primary-red);
           }
+
+          span {
+            color: var(--primary-green-accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            background-color: rgb(34, 34, 34);
+            cursor: pointer;
+          }
         }
 
         .messageImg {

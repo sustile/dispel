@@ -21,6 +21,7 @@
   border-radius: 5px;
   z-index: 50;
   margin-left: 4rem;
+  position: relative;
 }
 .Nav_Left .userDetails img {
   width: 5rem;
@@ -63,4 +64,111 @@
 .Nav_Right p {
   color: #ddd;
   font-size: 1rem;
+}
+
+.AccountCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 100;
+  background-color: rgb(32, 32, 32);
+  border-radius: 1rem;
+  padding: 1rem;
+  width: auto;
+  height: auto;
+  width: 37rem;
+  transform-origin: top left;
+  position: absolute;
+  top: 110%;
+  left: 0;
+}
+.AccountCard .ImgCont {
+  position: relative;
+}
+.AccountCard .ImgCont .coverImage,
+.AccountCard .ImgCont .NOCoverImage {
+  width: 35rem;
+  height: 15rem;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+  transition: filter 0.3s ease;
+}
+.AccountCard .ImgCont .NOCoverImage {
+  background-color: var(--primary-green-accent);
+}
+.AccountCard .ImgCont .userProfileImageCont {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(50%);
+  left: 2rem;
+}
+.AccountCard .ImgCont .userProfileImageCont .userProfileImage {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid rgb(32, 32, 32);
+}
+.AccountCard .userProfileData {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-left: 11rem;
+  margin-top: 1rem;
+}
+.AccountCard .userProfileData .nameCont span {
+  color: var(--primary-green-accent);
+  font-size: 1.8rem;
+  width: 20rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.AccountCard .userProfileData p {
+  color: #ddd;
+  font-size: 1.3rem;
+  font-weight: 800;
+  width: 20rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.AccountCard .userProfileAboutMe {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: var(--primary-bg);
+  padding: 1rem;
+  border-radius: 1rem;
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 1.5rem;
+}
+.AccountCard .userProfileAboutMe .aboutMeCont {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.AccountCard .userProfileAboutMe .aboutMeCont span {
+  color: #ddd;
+  background-color: rgb(31, 31, 31);
+  font-size: 1.5rem;
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+}
+.AccountCard .userProfileAboutMe p {
+  color: #ddd;
+  font-size: 1.5rem;
+}
+.AccountCard .userProfileAboutMe p span {
+  color: #f15bb5;
+  font-size: 1.4rem;
+  font-weight: bold;
 }

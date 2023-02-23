@@ -45,6 +45,7 @@ function Main(props) {
   useEffect(() => {
     (async () => {
       document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("userDataTrigger")) return;
         let target = e.target.closest(".profileTrigger");
         if (!target) {
           dispatch(ContextMenuActions.loadMenu(""));

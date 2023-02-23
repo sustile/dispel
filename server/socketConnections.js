@@ -86,6 +86,14 @@ io.on("connection", (socket) => {
       io.to(x).emit("friend-request", data);
     }
   });
+
+  socket.on("dm-call-data", (data) => {
+    socket.to(data).emit("dm-call-data", data);
+  });
+
+  socket.on("dm-call-data_sent", (data) => {
+    socket.to(data.dmId).emit("dm-call-data_sent", data);
+  });
 });
 
 async function setOffline(userId, socket) {

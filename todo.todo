@@ -4,8 +4,15 @@ REVAMP CALL SYSTEM
 ✔ WAITING LOBBY @done(23-01-29 22:07)
 ✔ BUG : call popup closes automatically for some reason .Check the timeout @done(23-01-29 22:21)
 ✔ try to make it so that the call can be answered from anywhere instead of only the dm page @done(23-02-01 15:51)
-☐ any way to see if someone is already in a waiting lobby
 ✔ make open chat btn available on all screen(btn is there but it doesnt work) @done(23-02-03 20:59)
+✔ create a profile centre to see user profile and make a button there to redirect to settings page to chnage acc settings @done(23-02-15 16:18)
+✔ pinging people @done(23-02-23 15:59)
+☐ Parse only 'approved' strings
+☐ sound tracks
+☐ ping cont
 
-ENHANCEMENTS
+CAUSING TOO MUCH PROBLEMS:
+☐ any way to see if someone is already in a waiting lobby
+
+ENHANCEMENTS:
 ☐ save user data to cache using redis to reduce the user checking in verify middleware

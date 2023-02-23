@@ -666,3 +666,24 @@ exports.changeSecondaryData = async (req, res) => {
   //   });
   // }
 };
+
+exports.checkUserExists = async (req, res) => {
+  try {
+    let user = await account.findOne({ _id: req.body.id }).select("name");
+
+    if (user) {
+      res.status(200).json({
+        status: "ok",
+        name: user.name,
+      });
+    } else {
+      res.status(200).json({
+        status: "fail",
+      });
+    }
+  } catch (err) {
+    res.status(200).json({
+      status: "fail",
+    });
+  }
+};

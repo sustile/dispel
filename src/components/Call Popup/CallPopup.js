@@ -68,6 +68,11 @@ function CallPopup(props) {
             name: USERDATAref.current.name,
             image: USERDATAref.current.image,
           });
+          dispatch(
+            currentCallStatusAction.setCont(
+              currentCallStatusRef.current.waiting.room
+            )
+          );
           return;
         } else {
           setDisplayData({

@@ -20,6 +20,7 @@ function GlobalEventHandlers(props) {
   let USERDATA = useSelector((state) => state.USERDATA);
   let currentCallStatus = useSelector((state) => state.currentCallStatus);
   let controlsOptions = useSelector((state) => state.controls);
+  let allDms = useSelector((state) => state.allDms);
 
   let IOdevices = useSelector((state) => state.IOdevices);
 
@@ -27,6 +28,7 @@ function GlobalEventHandlers(props) {
   let VOICESTREAMref = useRef();
   let currentCallStatusRef = useRef();
   let USERDATAref = useRef();
+  let alLDmsRef = useRef();
 
   let call = currentCallStatus.callObj;
 
@@ -35,7 +37,8 @@ function GlobalEventHandlers(props) {
     currentCallStatusRef.current = currentCallStatus;
     VOICESTREAMref.current = VOICESTREAM;
     USERDATAref.current = USERDATA;
-  }, [currentCallStatus, VOICESTREAM, currentMainCont, USERDATA]);
+    alLDmsRef.current = allDms;
+  }, [currentCallStatus, VOICESTREAM, currentMainCont, USERDATA, allDms]);
 
   useEffect(() => {
     if (!VOICESTREAMref.current) return;
@@ -145,6 +148,29 @@ function GlobalEventHandlers(props) {
         }
       });
       // }
+    });
+
+    socket.on("dm-call-data", (data) => {
+      if (
+        currentCallStatusRef.current.waiting.status &&
+        currentCallStatusRef.current.waiting.room === data
+      ) {
+        for (let el of allDms) {
+          if (el.dmId === data) {
+            socket.emit("dm-call-data_sent", { dmId: data, status: true });
+          }
+        }
+      }
+    });
+
+    socket.on("dm-call-data_sent", (data) => {
+      console.log(data);
+      dispatch(
+        currentCallStatusAction.setLobby({
+          status: true,
+          id: data.dmId,
+        })
+      );
     });
 
     socket.on("receive-message_dm", (data) => {
