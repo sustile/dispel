@@ -2,8 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
-  height: 8vh;
+  padding: 1rem 0;
 }
 .Nav_Left {
   display: flex;
@@ -166,6 +165,8 @@
 .AccountCard .userProfileAboutMe p {
   color: #ddd;
   font-size: 1.5rem;
+  line-height: 1.5;
+  white-space: pre-line;
 }
 .AccountCard .userProfileAboutMe p span {
   color: #f15bb5;

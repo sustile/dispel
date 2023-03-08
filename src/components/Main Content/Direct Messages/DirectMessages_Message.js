@@ -8,61 +8,189 @@ import generateUniqueId from "generate-unique-id";
 import axios from "axios";
 import { dmMessagesAction } from "../../Store/store";
 import urlRegex from "url-regex";
-import { Buffer } from "buffer";
-import parse from "html-react-parser";
-
-async function replaceAsync(str, regex, asyncFn) {
-  const promises = [];
-  str.replace(regex, (match) => {
-    const promise = asyncFn(match);
-    promises.push(promise);
-  });
-  const data = await Promise.all(promises);
-  return str.replace(regex, (user) => {
-    if (data[0].status === "ok") {
-      return `<span className="userPing">@${data[0].name}</span>`;
-    }
-    data.shift();
-    return user;
-  });
-
-  // if (data.status === "ok") {
-  //   return `<span className="userPing">${data.name}</span>`;
-  // }
-  // return `<span className="userPing">${user}</span>`;
-}
+import { set } from "mongoose";
 
 function DirectMessages_Message(props) {
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+  const [profileId, setProfileId] = useState(generateUniqueId());
+  const [userProfileData, setUserProfileData] = useState({
+    name: "",
+    image: "",
+    aboutMe: "",
+    coverImage: "",
+  });
+
+  function formatMessageURL(message = "") {
+    try {
+      message = message.replace(urlRegex({ strict: false }), (url) => {
+        return `<l:::${url}:::l>`;
+      });
+
+      let n = [];
+      let exists = false;
+
+      message.split(" ").forEach((el) => {
+        if (el.includes("<l:::")) {
+          let a, b, x;
+          let y = el;
+          while (true) {
+            if (!y.includes("<l:::")) break;
+            a = y.indexOf("<l::") + 4;
+            b = y.indexOf(":::l>");
+            x = y.substring(a + 1, b);
+            if (!x) return;
+            n.push(y.substring(0, a - 4));
+            n.push(x);
+            if (!exists) exists = true;
+            if (y.charAt(b + 5) == "") {
+              n.push(" ");
+            } else if (el.length === b + 1) {
+              n.push(y.charAt(b + 1));
+            }
+            y = y.substring(b + 5);
+          }
+        } else {
+          n.push(el + " ");
+        }
+      });
+      return [n, exists];
+    } catch (e) {
+      console.log("Error :", e);
+    }
+  }
+  function formatMessagePing(message = "") {
+    try {
+      message = message.replace(/<@([A-Z])?([0-9])?\w+>/g, (user) => {
+        return `${user.substring(1, user.length - 1)}`;
+      });
+
+      message = message.replace(/@([A-Z])?([0-9])?\w+/g, (user) => {
+        return `<${user}>`;
+      });
+
+      let n = [];
+
+      message.split(" ").forEach((el) => {
+        if (el.includes("<@")) {
+          let a, b, x;
+          let y = el;
+          while (true) {
+            if (!y.includes("<@")) break;
+            a = y.indexOf("<");
+
+            b = y.indexOf(">");
+
+            x = y.substring(a + 1, b);
+            if (!x) return;
+            n.push(y.substring(0, a));
+            n.push(x);
+            if (y.charAt(b + 1) == "") {
+              n.push(" ");
+            } else if (el.length === b + 1) {
+              n.push(y.charAt(b + 1));
+            }
+            y = y.substring(b + 1);
+          }
+        } else {
+          n.push(el + " ");
+        }
+      });
+      return n;
+    } catch (e) {
+      console.log("Error : ", e);
+    }
+  }
+
   let date = new Date(props.data.createdAt);
   let setReply = props.setReply;
-  let [linkthere, setLinkThere] = useState(false);
-  let [pingthere, setPingThere] = useState(false);
+  let [formated, setFormated] = useState(false);
   let socket = props.socket;
   let [imageWindow, setImageWindow] = useState(false);
 
   const CONSTANTS = useSelector((state) => state.CONSTANTS);
   const currentMainCont = useSelector((state) => state.currentMainCont);
   const USERDATA = useSelector((state) => state.USERDATA);
-  let [message, setMessage] = useState("");
-  // let message;
+  let [message, setMessage] = useState(props.data.message);
+  let [formattedMessage, setFormattedMessage] = useState([]);
 
-  if (!props.data.type.includes("image")) {
-    let x = props.data.message.replace(
-      urlRegex({ strict: false }),
-      function (url) {
-        if (!linkthere) setLinkThere(true);
-        return '<a href="' + url + '" target="_blank">' + url + "</a>";
+  useEffect(() => {
+    (async () => {
+      if (!props.data.type.includes("image")) {
+        let [x, exists] = formatMessageURL(message);
+        if (exists && !formated) setFormated(true);
+
+        // setMessage(x);
+        let y = formatMessagePing(x.join(""));
+        let newY = [];
+        let dmData = await axios.post(`${CONSTANTS.ip}/api/getDMUsers`, {
+          dm: currentMainCont.id,
+        });
+        dmData = dmData.data;
+        for (let el of y) {
+          if (el[0] === "@" && el.length > 5) {
+            if (dmData.status !== "ok") return;
+            // let x = dmData.users.filter(
+            //   (y) => el.id === String(y).substring(1)
+            // );
+            // console.log(x);
+            if (
+              dmData.users.filter((y) => y.id === String(el).substring(1))
+                .length === 0
+            ) {
+              newY.push(el);
+            } else {
+              let { data } = await axios.post(
+                `${CONSTANTS.ip}/api/checkUserExists`,
+                {
+                  id: String(el).substring(1),
+                }
+              );
+              if (data.status === "ok") {
+                if (!formated) setFormated(true);
+                newY.push(
+                  React.createElement(UserPing, {
+                    name: `@${data.name}`,
+                    setX: (x) => {
+                      setX(x);
+                    },
+                    setY: (y) => {
+                      setY(y);
+                    },
+                    profileId: profileId,
+                    setUserProfileData: (y) => {
+                      setUserProfileData(y);
+                    },
+                    userId: String(el).substring(1),
+                  })
+                );
+              } else {
+                newY.push(el);
+              }
+            }
+          } else if (String(el).includes("http") && exists) {
+            let check = false;
+            try {
+              check = Boolean(new URL(el));
+            } catch (e) {
+              check = false;
+            }
+            if (check) {
+              newY.push(
+                React.createElement("a", { href: el, target: "_blank" }, el)
+              );
+            } else {
+              newY.push(el);
+            }
+          } else {
+            newY.push(el);
+          }
+        }
+
+        setFormattedMessage(newY);
       }
-    );
-    replaceAsync(x, /@([A-Z])?([0-9])?\w+/g, async (user) => {
-      if (!pingthere) setPingThere(true);
-      // check whether user exists
-      let { data } = await axios.post(`${CONSTANTS.ip}/api/checkUserExists`, {
-        id: String(user).substring(1),
-      });
-      return data;
-    }).then((str) => setMessage(str));
-  }
+    })();
+  }, [props.data.message]);
 
   let monthList = [
     "Jan",
@@ -89,22 +217,12 @@ function DirectMessages_Message(props) {
     date.getHours() > 12 ? "PM" : "AM"
   }`;
 
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
   const [Id, setId] = useState(generateUniqueId());
-  const [profileId, setProfileId] = useState(generateUniqueId());
   let ContextMenu = useSelector((state) => state.contextMenu);
 
   let messageRef = useRef();
 
   let dispatch = useDispatch();
-
-  const [userProfileData, setUserProfileData] = useState({
-    name: "",
-    image: "",
-    aboutMe: "",
-    coverImage: "",
-  });
 
   function contextMenuHandler(e) {
     e.preventDefault();
@@ -113,19 +231,18 @@ function DirectMessages_Message(props) {
       e.target.classList.contains("Backdrop")
     )
       return;
-    console.log("yes");
-    e.pageX + 150 > window.innerWidth
-      ? setX(`${window.innerWidth - 180}px`)
+    e.pageX + 180 > window.innerWidth
+      ? setX(`${window.innerWidth - 200}px`)
       : setX(`${e.pageX}px`);
-    e.pageY + 200 > window.innerHeight
-      ? setY(`${window.innerHeight - 220}px`)
+    e.pageY + 90 > window.innerHeight
+      ? setY(`${window.innerHeight - 90}px`)
       : setY(`${e.pageY}px`);
 
-    // dispatch(ContextMenuActions.loadMenu(Id));
+    dispatch(ContextMenuActions.loadMenu(Id));
   }
 
   async function profileClickHandler(e) {
-    e.preventDefault();
+    // e.preventDefault();
     let target = e.target.closest(".profileTrigger");
     let userId = props.data.from;
     if (!target) {
@@ -133,12 +250,24 @@ function DirectMessages_Message(props) {
       if (!target) return;
       userId = props.reply.userId;
     }
+    // if(!target){
+    //   target = e.target.closest(".userPing");
+    //   if(!target) return
+    //   userId =
+    // }
 
-    e.pageX + 150 > window.innerWidth
-      ? setX(`${window.innerWidth - 180}px`)
+    // e.pageX + 150 > window.innerWidth
+    //   ? setX(`${window.innerWidth - 180}px`)
+    //   : setX(`${e.pageX}px`);
+    // e.pageY + 200 > window.innerHeight
+    //   ? setY(`${window.innerHeight - 220}px`)
+    //   : setY(`${e.pageY}px`);
+
+    e.pageX + 360 > window.innerWidth
+      ? setX(`${window.innerWidth - 360}px`)
       : setX(`${e.pageX}px`);
-    e.pageY + 200 > window.innerHeight
-      ? setY(`${window.innerHeight - 220}px`)
+    e.pageY + 320 > window.innerHeight
+      ? setY(`${window.innerHeight - 370}px`)
       : setY(`${e.pageY}px`);
 
     let { data } = await axios.post(`${CONSTANTS.ip}/api/getUserBasicData`, {
@@ -201,11 +330,20 @@ function DirectMessages_Message(props) {
       };
       socket.emit("edit_message-dm", currentMainCont.id, final);
       dispatch(dmMessagesAction.updateMessage(final));
+      setIsEdit(false);
+    } else {
+      setEditInputVal(message);
+      setIsEdit(false);
     }
-
-    setEditInputVal(message);
-    setIsEdit(false);
   }
+
+  useEffect(() => {
+    if (isEdit) {
+      editInput.current.style.height = `4.8rem`;
+      let scHeight = editInput.current.scrollHeight;
+      editInput.current.style.height = `${scHeight}px`;
+    }
+  }, [isEdit]);
 
   return (
     <motion.div
@@ -250,9 +388,13 @@ function DirectMessages_Message(props) {
           </span>
         </div>
       )}
-      <div className="DirectMessagesBody-Message_Details">
-        <img src={`/Images/${props.data.image}`} className="profileTrigger" />
-        <h2
+      {/* <div className="ectMessagesBody-Message_Details"> */}
+      <div className="DirectMessagesBody-Message-masterCont">
+        <img
+          src={`/Images/${props.data.image}`}
+          className="profileTrigger profileImage"
+        />
+        {/* <h2
           className="profileTrigger"
           style={
             props.data.from === USERDATA.id
@@ -262,117 +404,152 @@ function DirectMessages_Message(props) {
         >
           {props.data.name}
         </h2>
-        <span>{dateString}</span>
-      </div>
-      <div className="DirectMessagesBody-Message_Body">
-        {isEdit ||
-          (!String(props.data.type).includes("image") && (
-            <p>{linkthere || pingthere ? parse(message) : message}</p>
-          ))}
-        {String(props.data.type).includes("image") && (
-          <React.Fragment>
-            <img
-              src={`data:image/${props.data.message.ext};base64,${props.data.message.file}`}
-              className="messageImg"
-              style={{ cursor: "pointer" }}
-              onClick={() => setImageWindow(true)}
-            />
-            <AnimatePresence initial={false} exitBeforeEnter={true}>
-              {imageWindow && (
-                <motion.div className="ImageFullWindow">
-                  <motion.div
-                    className="Backdrop"
-                    onClick={() => setImageWindow(false)}
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: 1,
-                      transition: {
-                        duration: 0.2,
-                      },
-                    }}
-                    exit={{
-                      opacity: 0,
-                      transition: {
-                        duration: 0.2,
-                      },
-                    }}
-                  ></motion.div>
-                  <motion.img
-                    src={`data:image/${props.data.message.ext};base64,${props.data.message.file}`}
-                    className="messageImgFullScreen"
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: 1,
-                      transition: {
-                        duration: 0.2,
-                      },
-                    }}
-                    exit={{
-                      opacity: 0,
-                      transition: {
-                        duration: 0.2,
-                      },
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </React.Fragment>
-        )}
-        <AnimatePresence initial={false} exitBeforeEnter={true}>
-          {isEdit && (
-            <motion.form
-              className="MessageEditForm"
-              onSubmit={editFormHandler}
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: 1,
-                transition: {
-                  duration: 0.2,
-                },
-              }}
-              exit={{
-                opacity: 0,
-                transition: {
-                  duration: 0.1,
-                },
-              }}
+        <span>{dateString}</span> */}
+        {/* </div> */}
+        <div className="DirectMessagesBody-Message_Body">
+          <div className="DirectMessagesBody-Message_Body-details">
+            <h2
+              className="profileTrigger"
+              style={
+                props.data.from === USERDATA.id
+                  ? { color: "#84a59d" }
+                  : { color: "#9f85ff" }
+              }
             >
-              <input
-                ref={editInput}
-                onChange={(e) => setEditInputVal(e.target.value)}
-                type="text"
-                value={editInputVal}
-                placeholder="Enter The new Message"
-                maxLength="200"
-                minLength="1"
-                className="editMessageInput"
+              {props.data.name}
+            </h2>
+            <span className="dateString">{dateString}</span>
+          </div>
+          {isEdit ||
+            (!String(props.data.type).includes("image") && (
+              <p>{formated ? formattedMessage : message}</p>
+            ))}
+          {String(props.data.type).includes("image") && (
+            <React.Fragment>
+              <img
+                src={`data:image/${props.data.message.ext};base64,${props.data.message.file}`}
+                className="messageImg"
+                style={{ cursor: "pointer" }}
+                onClick={() => setImageWindow(true)}
               />
-              <motion.div className="BtnsCont">
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={editFormHandler}
-                >
-                  Submit
-                </motion.button>
-                <motion.button
-                  type="button"
-                  className="EditCancel"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => {
-                    setEditInputVal(message);
-                    setIsEdit(false);
-                  }}
-                >
-                  Cancel
-                </motion.button>
-              </motion.div>
-            </motion.form>
+              <AnimatePresence initial={false} exitBeforeEnter={true}>
+                {imageWindow && (
+                  <motion.div className="ImageFullWindow">
+                    <motion.div
+                      className="Backdrop"
+                      onClick={() => setImageWindow(false)}
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        opacity: 1,
+                        transition: {
+                          duration: 0.2,
+                        },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        transition: {
+                          duration: 0.2,
+                        },
+                      }}
+                    ></motion.div>
+                    <motion.img
+                      src={`data:image/${props.data.message.ext};base64,${props.data.message.file}`}
+                      className="messageImgFullScreen"
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        opacity: 1,
+                        transition: {
+                          duration: 0.2,
+                        },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        transition: {
+                          duration: 0.2,
+                        },
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </React.Fragment>
           )}
-        </AnimatePresence>
+          <AnimatePresence initial={false} exitBeforeEnter={true}>
+            {isEdit && (
+              <motion.form
+                className="MessageEditForm"
+                onSubmit={editFormHandler}
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                  transition: {
+                    duration: 0.2,
+                  },
+                }}
+                exit={{
+                  opacity: 0,
+                  transition: {
+                    duration: 0.1,
+                  },
+                }}
+              >
+                <textarea
+                  placeholder="Enter The new Message"
+                  maxLength="200"
+                  minLength="1"
+                  ref={editInput}
+                  className="editMessageInput"
+                  value={editInputVal}
+                  onKeyUp={(e) => {
+                    e.target.style.height = `4.8rem`;
+                    let scHeight = e.target.scrollHeight;
+                    e.target.style.height = `${scHeight}px`;
+                  }}
+                  onChange={(e) => setEditInputVal(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13 && !e.shiftKey) {
+                      // inputHandler(e);
+                      e.preventDefault();
+                      return;
+                    }
+                  }}
+                />
+                {/* <input
+                  ref={editInput}
+                  onChange={(e) => setEditInputVal(e.target.value)}
+                  type="text"
+                  value={editInputVal}
+                  placeholder="Enter The new Message"
+                  maxLength="200"
+                  minLength="1"
+                  className="editMessageInput"
+                /> */}
+                <motion.div className="BtnsCont">
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={editFormHandler}
+                  >
+                    Confirm Edit
+                  </motion.button>
+                  <motion.button
+                    type="button"
+                    className="EditCancel"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      setEditInputVal(message);
+                      setIsEdit(false);
+                    }}
+                  >
+                    Cancel
+                  </motion.button>
+                </motion.div>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       <AnimatePresence initial={false} exitBeforeEnter={true}>
@@ -436,7 +613,7 @@ function DirectMessages_Message(props) {
       </AnimatePresence>
 
       <AnimatePresence initial={false} exitBeforeEnter={true}>
-        {/* {ContextMenu.id === Id && (
+        {ContextMenu.id === Id && (
           <motion.div
             className="DirectMessages_MessageContextMenu"
             style={{
@@ -497,9 +674,42 @@ function DirectMessages_Message(props) {
               <span>Reply</span>
             </motion.div>
           </motion.div>
-        )} */}
+        )}
       </AnimatePresence>
     </motion.div>
+  );
+}
+
+function UserPing(props) {
+  let dispatch = useDispatch();
+  const CONSTANTS = useSelector((state) => state.CONSTANTS);
+
+  async function clickHandler(e) {
+    e.pageX + 360 > window.innerWidth
+      ? props.setX(`${window.innerWidth - 360}px`)
+      : props.setX(`${e.pageX}px`);
+    e.pageY + 320 > window.innerHeight
+      ? props.setY(`${window.innerHeight - 370}px`)
+      : props.setY(`${e.pageY}px`);
+
+    let { data } = await axios.post(`${CONSTANTS.ip}/api/getUserBasicData`, {
+      id: props.userId,
+    });
+
+    props.setUserProfileData({
+      name: data.user.name,
+      image: data.user.image,
+      aboutMe: data.user.aboutMe,
+      coverImage: data.user.coverImage,
+    });
+
+    dispatch(ContextMenuActions.loadMenu(props.profileId));
+  }
+
+  return (
+    <span className="userPing" onClick={clickHandler}>
+      {props.name}
+    </span>
   );
 }
 

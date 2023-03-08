@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import { AnimatePresence, motion } from "framer-motion";
-
+import { Howl, Howler } from "howler";
 import { useSelector, useDispatch } from "react-redux";
 import { currentCallStatusAction } from "../Store/store";
 import { current } from "@reduxjs/toolkit";
@@ -23,6 +23,18 @@ function CallCont(props) {
     stream: null,
   });
 
+  var callJoin = new Howl({
+    src: ["/Sound/call_join.wav"],
+    volume: 0.1,
+  });
+
+  var callLeave = new Howl({
+    src: ["/Sound/call_leave.wav"],
+    volume: 0.1,
+  });
+
+  let [joinedPlayed, setJoinedPlayed] = useState(false);
+
   function clickHandler() {
     if (currentCallStatus.callObj) {
       currentCallStatus.callObj.close();
@@ -37,9 +49,20 @@ function CallCont(props) {
       let x = currentCallStatus.callList.filter(
         (el) => el.id !== USERDATA.id
       )[0];
+      if (!callJoin.playing()) {
+        callJoin.play();
+      }
       setActiveCallData(x);
     }
   }, [currentCallStatus]);
+
+  // JOINED SOUND
+  useEffect(() => {
+    callJoin.play();
+    return () => {
+      callLeave.play();
+    };
+  }, []);
 
   return (
     <motion.div
@@ -54,7 +77,15 @@ function CallCont(props) {
           stiffness: 500,
         },
       }}
-      exit={{ translateY: -200 }}
+      exit={{
+        translateY: -200,
+        transition: {
+          duration: "1.3",
+          type: "spring",
+          damping: 25,
+          stiffness: 500,
+        },
+      }}
     >
       <div className="Call_details">
         <span className="activeCallText">

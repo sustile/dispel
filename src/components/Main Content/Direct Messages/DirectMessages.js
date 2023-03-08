@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import "./DirectMessages.css";
 import DirectMessagesHeader from "./DirectMessagesHeader";
 import DirectMessages_Message from "./DirectMessages_Message";
-
+import Fuse from "fuse.js";
 import { dmMessagesAction, spinnerActions } from "./../../Store/store";
 import { useEffect } from "react";
 import axios from "axios";
@@ -30,16 +30,21 @@ function DirectMessages(props) {
   let vcPeer = props.vcPeer;
   let inputRef = useRef();
   let messageCont = useRef();
+  let formRef = useRef();
 
   let [showContextMenu, setShowContextMenu] = useState(false);
   let [inputFocus, setInputFocus] = useState(false);
   let [showSubmit, setSubmit] = useState(false);
+  let [fuzzyCurrent, setfuzzyCurrent] = useState(false);
+  let [dmData, setDmData] = useState(false);
   let [reply, replyReducer] = useReducer(replyReducerFunction, {
     status: false,
     messageId: "",
     name: "",
     replyingTo: "",
   });
+
+  let [pingRender, setPingRender] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -61,9 +66,13 @@ function DirectMessages(props) {
   }
 
   async function inputHandler(e) {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
 
     if (inputRef.current.value.trim() === "") return;
+
+    // console.log(inputRef.current.value.split("\n"));
 
     if (reply.status) {
       let final = {
@@ -141,7 +150,10 @@ function DirectMessages(props) {
       }
     }
 
+    setfuzzyCurrent(false);
+    setPingRender([]);
     inputRef.current.value = "";
+    inputRef.current.style.height = "4.8rem";
     setReply({
       type: "RESET",
     });
@@ -266,12 +278,12 @@ function DirectMessages(props) {
 
   useEffect(() => {
     const timer = setTimeout(async () => {
-      if (!spinnerState) {
-        dispatch(spinnerActions.toggleSpinner(true));
-      }
       let x = allDmMessages.filter((el) => el.dmId === currentCont.id);
       if (x.length > 0) {
         x = x[0];
+        if (x.length > 5) {
+          dispatch(spinnerActions.toggleSpinner(true));
+        }
       } else {
         x = undefined;
       }
@@ -395,12 +407,20 @@ function DirectMessages(props) {
 
   function scrollHandler(e) {
     let main = e.target;
-    let scrollBtm = main.clientHeight - main.scrollTop;
-    if (scrollBtm === main.scrollHeight) {
+    let scrollBtm = Math.floor(main.clientHeight - main.scrollTop);
+    if (
+      scrollBtm + 1 === main.scrollHeight ||
+      scrollBtm - 1 === main.scrollHeight ||
+      scrollBtm === main.scrollHeight
+    ) {
       if (main.scrollHeight === main.clientHeight) return;
       setTimeout(async () => {
-        scrollBtm = main.clientHeight - main.scrollTop;
-        if (scrollBtm === main.scrollHeight) {
+        scrollBtm = Math.floor(main.clientHeight - main.scrollTop);
+        if (
+          scrollBtm + 1 === main.scrollHeight ||
+          scrollBtm - 1 === main.scrollHeight ||
+          scrollBtm === main.scrollHeight
+        ) {
           if (currentDmData.isMaximum) return;
 
           dispatch(spinnerActions.toggleSpinner(true));
@@ -568,6 +588,16 @@ function DirectMessages(props) {
     }
   }
 
+  useEffect(() => {
+    (async () => {
+      let { data } = await axios.post(`${CONSTANTS.ip}/api/getDMUsers`, {
+        dm: currentCont.id,
+      });
+
+      setDmData(data.users);
+    })();
+  }, [currentCont]);
+
   return (
     <div className="DirectMessages-Wrapper">
       <DirectMessagesHeader
@@ -585,10 +615,24 @@ function DirectMessages(props) {
             key="ASDSADASDSA"
             data={{
               name: "Systile",
-              image: "test.gif",
+              image: "default.png",
               id: "03824923023",
               type: "normal",
-              message: "test",
+              message: "test\nlol\ntest2",
+              createdAt: "2022-12-13T10:32:27.433+00:00",
+            }}
+            showContextMenu={showContextMenu}
+            setShowContextMenu={setContextMenu}
+            setReply={setReply}
+          />
+          <DirectMessages_Message
+            key="ASDSADASDSA"
+            data={{
+              name: "Systile",
+              image: "default.png",
+              id: "03824923023",
+              type: "normal",
+              message: "test\nlol\ntest2",
               createdAt: "2022-12-13T10:32:27.433+00:00",
             }}
             showContextMenu={showContextMenu}
@@ -611,7 +655,7 @@ function DirectMessages(props) {
             : "DirectMessages-InputWrapper"
         }
       >
-        <form onSubmit={inputHandler}>
+        <form onSubmit={inputHandler} ref={formRef}>
           <div className="directMessages-input-cont">
             <div
               className={
@@ -620,6 +664,82 @@ function DirectMessages(props) {
                   : "directMessages-input-cont-primary"
               }
             >
+              <AnimatePresence initial={false}>
+                {(pingRender.length !== 0 || fuzzyCurrent !== false) && (
+                  <motion.div
+                    className="pingCont"
+                    initial={{
+                      opacity: 0,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      transition: {
+                        style: "spring",
+                        duration: 0.1,
+                      },
+                    }}
+                  >
+                    {/* <h2>Ping Users</h2> */}
+                    <div className="pingCont-primary">
+                      {pingRender.map((el) => {
+                        return (
+                          <motion.div
+                            className="PingUser"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileHover={{
+                              backgroundColor: "#1a1a1a",
+                              scale: 1.01,
+                              transition: {
+                                duration: 0.3,
+                                type: "spring",
+                              },
+                            }}
+                            animate={{
+                              opacity: 1,
+                              scale: 1,
+                              transition: {
+                                duration: 0.1,
+                              },
+                            }}
+                            whileTap={{
+                              scale: 0.99,
+                              transition: {
+                                duration: 0.3,
+                                type: "spring",
+                              },
+                            }}
+                            exit={{
+                              opacity: 0,
+                              scale: 0.95,
+                              transition: {
+                                duration: 0.1,
+                              },
+                            }}
+                            onClick={(e) => {
+                              inputRef.current.setRangeText(
+                                el.id,
+                                fuzzyCurrent + 1,
+                                inputRef.current.selectionEnd,
+                                "select"
+                              );
+                              setPingRender([]);
+                              setfuzzyCurrent(false);
+                            }}
+                          >
+                            <img src={`/Images/${el.image}`} />
+                            <p className="PingUser-name">{el.name}</p>
+                            <span>
+                              <p>@</p>
+                              {el.id}
+                            </span>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {reply.status && (
                 <div className="ReplyCont">
                   <span>Replying to {reply.name}</span>
@@ -634,7 +754,7 @@ function DirectMessages(props) {
                 </div>
               )}
               <div className="inputCont">
-                <input
+                {/* <input
                   type="text"
                   placeholder={`Send a Message to ${props.data.name}`}
                   maxLength="200"
@@ -648,6 +768,88 @@ function DirectMessages(props) {
                   //     setSubmit(false);
                   //   }
                   // }}
+                  onFocus={() => setInputFocus(true)}
+                  onBlur={() => setInputFocus(false)}
+                /> */}
+
+                <textarea
+                  placeholder={`Send a Message to ${props.data.name}`}
+                  maxLength="200"
+                  minLength="1"
+                  ref={inputRef}
+                  onInput={async (e) => {
+                    if (
+                      e.nativeEvent.data === "@" ||
+                      e.target.value[e.target.value.length - 1] === "@"
+                    ) {
+                      setfuzzyCurrent(inputRef.current.selectionStart - 1);
+                      let { data } = await axios.post(
+                        `${CONSTANTS.ip}/api/getDMUsers`,
+                        {
+                          dm: currentCont.id,
+                        }
+                      );
+                      setDmData(data.users);
+                      setPingRender(data.users);
+                    } else if (
+                      (fuzzyCurrent &&
+                        e.target.value.length - 1 <= fuzzyCurrent) ||
+                      e.target.value.length === 0
+                    ) {
+                      // console.log("setting to false");
+                      setPingRender([]);
+                      setfuzzyCurrent(false);
+                    } else if (
+                      fuzzyCurrent !== false &&
+                      e.target.value.length - 1 > fuzzyCurrent
+                    ) {
+                      let str = e.target.value.substring(
+                        fuzzyCurrent + 1,
+                        e.target.value.length - 1
+                      );
+                      const fuse = new Fuse(dmData, {
+                        keys: ["name", "id"],
+                      });
+
+                      const newResults = fuse.search(str);
+
+                      let x = [];
+                      for (let el of newResults) {
+                        let { data } = await axios.post(
+                          `${CONSTANTS.ip}/api/getUserBasicData`,
+                          {
+                            id: el.item.id,
+                          }
+                        );
+                        x.push({
+                          name: data.user.name,
+                          id: el.item.id,
+                          image: data.user.image,
+                        });
+                      }
+                      setPingRender(x);
+                      // console.log(e.nativeEvent.data);
+                    }
+                  }}
+                  onKeyUp={(e) => {
+                    e.target.style.height = `4.8rem`;
+                    let scHeight = e.target.scrollHeight;
+                    e.target.style.height = `${scHeight}px`;
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13 && !e.shiftKey) {
+                      inputHandler(e);
+                      e.preventDefault();
+                      return;
+                      // formRef.current.submit();
+                    }
+                    // e.target.style.height = `auto`;
+                    // let scHeight = e.target.scrollHeight;
+                    // e.target.style.height = `${scHeight}px`;
+                    // if (e.target.value.trim() === "") {
+                    //   e.target.style.height = `4.5rem`;
+                    // }
+                  }}
                   onFocus={() => setInputFocus(true)}
                   onBlur={() => setInputFocus(false)}
                 />
@@ -704,7 +906,7 @@ function DirectMessages(props) {
               multiple
               onChange={fileHandler}
             />
-            <label htmlFor="fileInput">
+            <label htmlFor="fileInput" className="imageLabel">
               <motion.i
                 initial={{
                   scale: 1,

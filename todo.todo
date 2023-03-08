@@ -7,9 +7,17 @@ REVAMP CALL SYSTEM
 ✔ make open chat btn available on all screen(btn is there but it doesnt work) @done(23-02-03 20:59)
 ✔ create a profile centre to see user profile and make a button there to redirect to settings page to chnage acc settings @done(23-02-15 16:18)
 ✔ pinging people @done(23-02-23 15:59)
-☐ Parse only 'approved' strings
-☐ sound tracks
-☐ ping cont
+✔ Parse only 'approved' strings @done(23-02-25 23:18)
+✔ update edit container to newer textbox @done(23-03-02 19:34)
+✔ open profile cont when clicked on a ping @done(23-03-02 19:57)
+✔ make so that only autorized users can be pinged(like check if the user in the dm and if  the user exists in the server) @done(23-03-02 20:22)
+✔ ping cont @done(23-03-05 15:55)
+✔ sound tracks @done(23-03-07 09:24)
+✔ make it so that popup do not overflow @done(23-03-07 12:52)
+
+☐ maybe make a ghost of an message until it gets delivered
+
+BUGS:
 
 CAUSING TOO MUCH PROBLEMS:
 ☐ any way to see if someone is already in a waiting lobby

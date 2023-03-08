@@ -4,6 +4,7 @@ import "./CallPopup.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { currentCallStatusAction } from "../Store/store";
+import { Howl, Howler } from "howler";
 
 function CallPopup(props) {
   let vcPeer = props.vcPeer;
@@ -25,6 +26,12 @@ function CallPopup(props) {
   let currentCallStatusRef = useRef();
   let USERDATAref = useRef();
 
+  var callSound = new Howl({
+    src: ["/Sound/call.mp3"],
+    loop: true,
+    volume: 0.1,
+  });
+
   useEffect(() => {
     currentMainContRef.current = currentMainCont;
     currentCallStatusRef.current = currentCallStatus;
@@ -41,6 +48,7 @@ function CallPopup(props) {
     dispatch(
       currentCallStatusAction.setCont(displayData.room || currentMainCont.id)
     );
+    callSound.stop();
     setDisplayPopup(false);
     setDisplayData({
       name: "",
@@ -50,6 +58,7 @@ function CallPopup(props) {
   }
 
   function declineHandler() {
+    callSound.stop();
     setDisplayPopup(false);
     setDisplayData({
       name: "",
@@ -57,6 +66,12 @@ function CallPopup(props) {
       room: "",
     });
   }
+
+  useEffect(() => {
+    if (displayPopup) {
+      callSound.play();
+    }
+  }, [displayPopup]);
 
   useEffect(() => {
     if (!initial) {

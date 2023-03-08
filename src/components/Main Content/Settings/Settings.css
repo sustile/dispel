@@ -1,14 +1,14 @@
 .Settings-Wrapper {
   width: 100%;
-  height: 92vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: stretch;
   align-items: center;
 }
 .Settings-Wrapper .Settings-type-Selector {
   width: 100%;
-  height: 8%;
+  padding: 1.5rem 0;
   display: flex;
   flex-direction: row;
   gap: 10rem;
@@ -43,7 +43,8 @@
 }
 .Settings-Wrapper .SoundSettings-MasterCont {
   width: 100%;
-  height: 92%;
+  height: 100%;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -225,7 +226,7 @@
 }
 .Settings-Wrapper .AccountSettings-MasterCont {
   width: 100%;
-  height: 92%;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -500,6 +501,8 @@
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .AccountCard .userProfileAboutMe p {
   color: #ddd;
   font-size: 1.5rem;
+  line-height: 1.5;
+  white-space: pre-line;
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .AccountCard .userProfileAboutMe p span {
   color: #f15bb5;

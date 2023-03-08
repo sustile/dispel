@@ -17,6 +17,7 @@ function Nav(props) {
   function ClickHandler() {
     dispatch(ContextMenuActions.loadMenu(profileId));
   }
+
   return (
     <div className="Nav">
       <div className="Nav_Left">

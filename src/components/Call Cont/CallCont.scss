@@ -6,7 +6,9 @@
   background-color: rgb(26, 26, 26);
   padding: 1rem 2rem;
   border-radius: 1rem;
-  margin-right: 10rem;
+  // margin-right: 10rem;
+  position: absolute;
+  right: 15rem;
   z-index: 10000;
 
   .Call_details {

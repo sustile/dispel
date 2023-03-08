@@ -2,7 +2,6 @@ import React, { useRef, useState, useReducer } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { Form } from "react-router-dom";
 import { UserDataActions, notificationsAction } from "../../Store/store";
 
 function changeReducer(state, action) {
@@ -114,6 +113,7 @@ export default function AccountMenu() {
     const fd = new FormData();
     const fd2 = new FormData();
     fd.append("newName", inputData.validName ? inputData.name : "undefined");
+    console.log(dpinput.current.files);
     fd.append(
       "image",
       inputData.validDp ? dpinput.current.files[0] : undefined
@@ -126,18 +126,24 @@ export default function AccountMenu() {
       "image",
       inputData.validCover ? coverInput.current.files[0] : undefined
     );
-    let result;
-    let result2;
+    let result = {
+      data: {
+        status: "fail",
+      },
+    };
+    let result2 = {
+      data: {
+        status: "fail",
+      },
+    };
     if (inputData.validName || inputData.validDp) {
       result = await axios.post(`${CONSTANTS.ip}/api/changeData`, fd);
-      console.log(result);
     }
     if (inputData.validAbout || inputData.validCover) {
       result2 = await axios.post(
         `${CONSTANTS.ip}/api/changeSecondaryData`,
         fd2
       );
-      console.log(result2);
     }
     if (result.data.status === "ok" || result2.data.status === "ok") {
       dispatchData({
@@ -250,13 +256,20 @@ export default function AccountMenu() {
                   accept=".gif,.jpg,.jpeg,.png"
                   ref={coverInput}
                   onChange={(e) => {
+                    if (!e.target.files[0]) {
+                      dispatchData({
+                        type: "COVER_CHANGE",
+                        data: "",
+                      });
+                      return;
+                    }
                     if (
                       ![
                         "image/jpeg",
                         "image/jpg",
                         "image/gif",
                         "image/png",
-                      ].includes(e.target.files[0])
+                      ].includes(e.target.files[0].type)
                     ) {
                       dispatch(
                         notificationsAction.setNotification({
@@ -325,13 +338,20 @@ export default function AccountMenu() {
                   accept=".gif,.jpg,.jpeg,.png"
                   ref={dpinput}
                   onChange={(e) => {
+                    if (!e.target.files[0]) {
+                      dispatchData({
+                        type: "DP_CHANGE",
+                        data: "",
+                      });
+                      return;
+                    }
                     if (
                       ![
                         "image/jpeg",
                         "image/jpg",
                         "image/gif",
                         "image/png",
-                      ].includes(e.target.files[0])
+                      ].includes(e.target.files[0].type)
                     ) {
                       dispatch(
                         notificationsAction.setNotification({
