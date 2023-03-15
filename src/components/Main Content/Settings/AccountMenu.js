@@ -113,7 +113,7 @@ export default function AccountMenu() {
     const fd = new FormData();
     const fd2 = new FormData();
     fd.append("newName", inputData.validName ? inputData.name : "undefined");
-    console.log(dpinput.current.files);
+    // console.log(dpinput.current.files);
     fd.append(
       "image",
       inputData.validDp ? dpinput.current.files[0] : undefined

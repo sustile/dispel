@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ContextMenuActions } from "../../Store/store";
-
+import compress from "compress-base64";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef } from "react";
 import generateUniqueId from "generate-unique-id";
 import axios from "axios";
 import { dmMessagesAction } from "../../Store/store";
 import urlRegex from "url-regex";
-import { set } from "mongoose";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import ImagePlaceHolder from "./ImagePlaceHolder";
 
 function DirectMessages_Message(props) {
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
+  let [imageData, setImageData] = useState("");
   const [profileId, setProfileId] = useState(generateUniqueId());
   const [userProfileData, setUserProfileData] = useState({
     name: "",
@@ -20,6 +22,8 @@ function DirectMessages_Message(props) {
     aboutMe: "",
     coverImage: "",
   });
+  let [loadImage, setLoadImage] = useState(false);
+  let [RenderReady, setRenderReady] = useState(false);
 
   function formatMessageURL(message = "") {
     try {
@@ -117,9 +121,9 @@ function DirectMessages_Message(props) {
   useEffect(() => {
     (async () => {
       if (!props.data.type.includes("image")) {
-        let [x, exists] = formatMessageURL(message);
+        let [x, exists] = formatMessageURL(props.data.message);
         if (exists && !formated) setFormated(true);
-
+        setMessage(props.data.message);
         // setMessage(x);
         let y = formatMessagePing(x.join(""));
         let newY = [];
@@ -345,6 +349,35 @@ function DirectMessages_Message(props) {
     }
   }, [isEdit]);
 
+  // useEffect(() => {
+  //   (async () => {
+  //     if (String(props.data.type).includes("image")) {
+  //       if (imageData === "") {
+  //         const reader = new FileReader();
+  //         reader.onload = (event) => {
+  //           compress(event.target.result, {
+  //             width: 400,
+  //             type: "image/png", // default
+  //             max: 200, // max size
+  //             min: 20, // min size
+  //             quality: 0.8,
+  //           }).then((result) => {
+  //             setImageData(result);
+  //           });
+  //         };
+
+  //         fetch(
+  //           `data:image/${props.data.message.ext};base64,${props.data.message.file}`
+  //         )
+  //           .then((res) => res.blob())
+  //           .then((res) => {
+  //             reader.readAsDataURL(res);
+  //           });
+  //       }
+  //     }
+  //   })();
+  // }, []);
+
   return (
     <motion.div
       className="DirectMessagesBody-Message"
@@ -368,18 +401,24 @@ function DirectMessages_Message(props) {
         <div className="DirectMessages-reply-Cont">
           <i class="ph-arrow-elbow-left-down-bold"></i>
           <img
-            src={`/Images/${props.reply.image}`}
+            src={`/Images/${
+              props.reply.userId === USERDATA.id
+                ? USERDATA.image
+                : props.reply.image
+            }`}
             className="profileTriggerReply"
           />
           <h2
             style={
               props.reply.userId === USERDATA.id
-                ? { color: "#84a59d" }
-                : { color: "#9f85ff" }
+                ? { color: "var(--primary-green-accent)" }
+                : { color: "#bde0fe" }
             }
             className="profileTriggerReply"
           >
-            {props.reply.name}
+            {props.reply.userId === USERDATA.id
+              ? USERDATA.name
+              : props.reply.name}
           </h2>
           <span>
             {props.reply.replyMessage.length > 200
@@ -391,7 +430,9 @@ function DirectMessages_Message(props) {
       {/* <div className="ectMessagesBody-Message_Details"> */}
       <div className="DirectMessagesBody-Message-masterCont">
         <img
-          src={`/Images/${props.data.image}`}
+          src={`/Images/${
+            props.data.from === USERDATA.id ? USERDATA.image : props.data.image
+          }`}
           className="profileTrigger profileImage"
         />
         {/* <h2
@@ -412,11 +453,13 @@ function DirectMessages_Message(props) {
               className="profileTrigger"
               style={
                 props.data.from === USERDATA.id
-                  ? { color: "#84a59d" }
-                  : { color: "#9f85ff" }
+                  ? { color: "var(--primary-green-accent)" }
+                  : { color: "#bde0fe" }
               }
             >
-              {props.data.name}
+              {props.data.from === USERDATA.id
+                ? USERDATA.name
+                : props.data.name}
             </h2>
             <span className="dateString">{dateString}</span>
           </div>
@@ -426,12 +469,82 @@ function DirectMessages_Message(props) {
             ))}
           {String(props.data.type).includes("image") && (
             <React.Fragment>
-              <img
+              {/* <LazyLoadImage
                 src={`data:image/${props.data.message.ext};base64,${props.data.message.file}`}
                 className="messageImg"
+                effect="opacity"
                 style={{ cursor: "pointer" }}
                 onClick={() => setImageWindow(true)}
-              />
+                placeholder={
+                  <ImagePlaceHolder
+                    src={`data:image/${props.data.message.ext};base64,${props.data.message.file}`}
+                  />
+                }
+              /> */}
+              <AnimatePresence initial={false}>
+                <motion.div
+                  className="imagePlaceholder"
+                  exit={{
+                    scale: 0.9,
+                    opacity: 0,
+                    transition: {
+                      duration: 0.3,
+                      type: "spring",
+                    },
+                  }}
+                >
+                  {!loadImage && !RenderReady && (
+                    <React.Fragment>
+                      <motion.i
+                        initial={{ scale: 1 }}
+                        whileHover={{
+                          scale: 1.1,
+                          rotate: 180,
+                          transition: {
+                            duration: 0.3,
+                            type: "spring",
+                          },
+                        }}
+                        whileTap={{
+                          scale: 0.95,
+                          transition: {
+                            duration: 0.2,
+                            type: " spring",
+                          },
+                        }}
+                        class="ph ph-spinner-gap loadImage"
+                        onClick={() => setLoadImage(true)}
+                      ></motion.i>
+                      <motion.i class="ph ph-image imageIcon"></motion.i>
+                    </React.Fragment>
+                  )}
+                  {loadImage && (
+                    <motion.img
+                      initial={{
+                        scale: 0.5,
+                        opacity: 0,
+                      }}
+                      style={{
+                        cursor: "pointer",
+                      }}
+                      animate={{
+                        scale: 1,
+                        opacity: 1,
+                        transition: {
+                          duration: 0.3,
+                          type: "spring",
+                        },
+                      }}
+                      onLoad={(e) => {
+                        setRenderReady(true);
+                      }}
+                      src={`data:image/${props.data.message.ext};base64,${props.data.message.file}`}
+                      className="messageImg"
+                      onClick={() => setImageWindow(true)}
+                    />
+                  )}
+                </motion.div>
+              </AnimatePresence>
               <AnimatePresence initial={false} exitBeforeEnter={true}>
                 {imageWindow && (
                   <motion.div className="ImageFullWindow">

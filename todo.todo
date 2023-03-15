@@ -14,8 +14,17 @@ REVAMP CALL SYSTEM
 ✔ ping cont @done(23-03-05 15:55)
 ✔ sound tracks @done(23-03-07 09:24)
 ✔ make it so that popup do not overflow @done(23-03-07 12:52)
+✔ maybe make a ghost of an message until it gets delivered @done(23-03-08 17:22)
 
-☐ maybe make a ghost of an message until it gets delivered
+✔ image drag and drop upload @done(23-03-08 23:14)
+✔ maybe try to beautify the file upload drag mechanism (like an animation ) @done(23-03-09 11:33)
+
+✔ add a file upload button and a emoji button @done(23-03-09 16:48)
+✔ make emojipicker work (see docs) @done(23-03-11 20:27)
+✔ something wrong with lazy loading (either fix it or scrap the algorithm) @done(23-03-14 11:11)
+✔ messages edit message event doesnt work (data is there is the state but not rendering : maybe due to the new array algo for message rendering) @done(23-03-14 12:28)
+✔ show number limit in the textbox @done(23-03-14 21:27)
+☐ make site look professional (proper styling)
 
 BUGS:
 

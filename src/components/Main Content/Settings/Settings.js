@@ -10,14 +10,31 @@ function Settings(props) {
 
   let [active, setActive] = useState("account");
   return (
-    <div className="Settings-Wrapper">
+    <motion.div
+      className="Settings-Wrapper"
+      // initial={{ scale: 0.98, opacity: 0 }}
+      // animate={{
+      //   scale: 1,
+      //   opacity: 1,
+      //   transition: {
+      //     duration: 0.2,
+      //   },
+      // }}
+      // exit={{
+      //   scale: 0.6,
+      //   opacity: 0,
+      //   transition: {
+      //     duration: 0.2,
+      //   },
+      // }}
+    >
       <div className="Settings-type-Selector">
         <motion.button
           className={active === "account" ? "active" : ""}
           whileHover={
             active !== "account"
               ? {
-                  scale: 1.12,
+                  scale: 1.03,
                   backgroundColor: "rgb(39, 39, 39)",
                   transition: {
                     type: "spring",
@@ -25,7 +42,7 @@ function Settings(props) {
                   },
                 }
               : {
-                  scale: 1.12,
+                  scale: 1.03,
                   transition: {
                     type: "spring",
                     duration: 0.3,
@@ -36,13 +53,14 @@ function Settings(props) {
             if (active !== "account") setActive("account");
           }}
           whileTap={{
-            scale: 0.9,
+            scale: 0.98,
             transition: {
               type: "spring",
               duration: 0.3,
             },
           }}
         >
+          <i class="ph ph-user"></i>
           Account
         </motion.button>
 
@@ -51,7 +69,7 @@ function Settings(props) {
           whileHover={
             active !== "sound"
               ? {
-                  scale: 1.12,
+                  scale: 1.03,
                   backgroundColor: "rgb(39, 39, 39)",
                   transition: {
                     type: "spring",
@@ -59,7 +77,7 @@ function Settings(props) {
                   },
                 }
               : {
-                  scale: 1.12,
+                  scale: 1.03,
                   transition: {
                     type: "spring",
                     duration: 0.3,
@@ -70,27 +88,28 @@ function Settings(props) {
             if (active !== "sound") setActive("sound");
           }}
           whileTap={{
-            scale: 0.9,
+            scale: 0.98,
             transition: {
               type: "spring",
               duration: 0.3,
             },
           }}
         >
+          <i class="ph ph-speaker-simple-high"></i>
           Sound
         </motion.button>
 
         <motion.button
           className="logoutBtn"
           whileHover={{
-            scale: 1.12,
+            scale: 1.03,
             transition: {
               type: "spring",
               duration: 0.3,
             },
           }}
           whileTap={{
-            scale: 0.9,
+            scale: 0.98,
             transition: {
               type: "spring",
               duration: 0.3,
@@ -98,12 +117,13 @@ function Settings(props) {
           }}
           onClick={() => (window.location.href = "/logout")}
         >
+          <i class="ph ph-sign-out"></i>
           Logout
         </motion.button>
       </div>
       {active === "sound" && <SoundMenu />}
       {active === "account" && <AccountMenu />}
-    </div>
+    </motion.div>
   );
 }
 

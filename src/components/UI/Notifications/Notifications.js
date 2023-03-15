@@ -13,7 +13,7 @@ export default function Notifications() {
       if (notificationState.ongoing) {
         dispatch(notificationsAction.closeNotifications());
       }
-    }, 5 * 1000);
+    }, 3 * 1000);
     return () => {
       clearTimeout(timer);
     };

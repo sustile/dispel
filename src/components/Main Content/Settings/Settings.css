@@ -20,13 +20,23 @@
   border: 0;
   outline: 0;
   padding: 0.8rem 2rem;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background-color: #333;
   font-family: "Roboto Mono", monospace;
-  font-size: 1.9rem;
+  font-size: 1.5rem;
   color: var(--primary-red);
   font-weight: 500;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.Settings-Wrapper .Settings-type-Selector button i {
+  color: #f15bb5;
+  background-color: #333;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
 }
 .Settings-Wrapper .Settings-type-Selector .logoutBtn {
   background-color: var(--secondary-red);
@@ -87,7 +97,7 @@
 }
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .OutputDevicesMain .header,
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .inputDeviceMain .header {
-  color: #ddd;
+  color: #f1faee;
   font-size: 2rem;
   color: var(--primary-green-accent);
 }
@@ -168,7 +178,7 @@
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .inputDeviceMain .OutputOptionContent .InputOptionDisplay h2,
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .inputDeviceMain .InputOptionContent .OutputOptionDisplay h2,
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .inputDeviceMain .InputOptionContent .InputOptionDisplay h2 {
-  color: #ddd;
+  color: #f1faee;
   font-weight: 400;
   width: 50rem;
   overflow: hidden;
@@ -217,7 +227,7 @@
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .inputDeviceMain .OutputOptionContent .InputOptionDisplay .outputListOptions span,
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .inputDeviceMain .InputOptionContent .OutputOptionDisplay .outputListOptions span,
 .Settings-Wrapper .SoundSettings-MasterCont_RenderCont .inputDeviceMain .InputOptionContent .InputOptionDisplay .outputListOptions span {
-  color: #ddd;
+  color: #f1faee;
   width: 100%;
   padding: 0.8rem 2rem;
   font-size: 1.3rem;
@@ -266,12 +276,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
+  width: 80%;
+  font-family: "Roboto Mono", monospace;
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .saveCont p {
-  color: var(--primary-green-accent);
+  color: #f1faee;
   font-size: 1.6rem;
   font-weight: 500;
+  font-family: "Roboto Mono", monospace;
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .saveCont .btnCont {
   display: flex;
@@ -285,17 +297,14 @@
   padding: 0.8rem 3rem;
   border-radius: 0.5rem;
   background-color: rgb(35, 35, 35);
-  color: #fff;
+  color: #f1faee;
   font-size: 1.6rem;
   cursor: pointer;
   font-weight: 600;
-  letter-spacing: 0.1rem;
-}
-.Settings-Wrapper .AccountSettings-MasterCont_RenderCont .saveCont .btnCont .save {
-  color: var(--primary-green-accent);
+  font-family: "Roboto Mono", monospace;
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .saveCont .btnCont .discard {
-  background-color: #f15bb5;
+  background-color: var(--primary-green-accent);
   color: #333;
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .AccountCard {
@@ -441,7 +450,7 @@
   padding: 0.8rem 1.5rem;
   background-color: #333;
   border-radius: 1rem;
-  color: #ddd;
+  color: #f1faee;
   font-weight: 500;
   font-family: "Roboto Mono", monospace;
   font-size: 1.5rem;
@@ -454,7 +463,7 @@
   overflow: hidden;
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .AccountCard .userProfileData p {
-  color: #ddd;
+  color: #f1faee;
   font-size: 1.3rem;
   font-weight: 800;
   width: 20rem;
@@ -481,7 +490,7 @@
   align-items: center;
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .AccountCard .userProfileAboutMe .aboutMeCont span {
-  color: #ddd;
+  color: #f1faee;
   background-color: rgb(31, 31, 31);
   font-size: 1.5rem;
   padding: 0.5rem 2rem;
@@ -499,7 +508,7 @@
   color: var(--secondary-red);
 }
 .Settings-Wrapper .AccountSettings-MasterCont_RenderCont .AccountCard .userProfileAboutMe p {
-  color: #ddd;
+  color: #f1faee;
   font-size: 1.5rem;
   line-height: 1.5;
   white-space: pre-line;
@@ -518,7 +527,7 @@
   padding: 0.8rem 1.5rem;
   background-color: #333;
   border-radius: 1rem;
-  color: #ddd;
+  color: #f1faee;
   font-weight: 500;
   font-family: "Roboto Mono", monospace;
   font-size: 1.5rem;

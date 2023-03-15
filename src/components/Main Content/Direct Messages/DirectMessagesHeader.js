@@ -45,9 +45,9 @@ function DirectMessagesHeader(props) {
         onClick={clickHandler}
         disabled={currentCallStatus.status}
         whileHover={
-          !currentCallStatus.status
+          !currentCallStatus.status || !currentCallStatus.waiting.status
             ? {
-                scale: 1.2,
+                scale: 1.1,
                 transition: {
                   duration: 0.5,
                   type: "spring",
@@ -56,7 +56,7 @@ function DirectMessagesHeader(props) {
             : ""
         }
         whileTap={{
-          scale: 0.9,
+          scale: 0.98,
           transition: {
             duration: 0.1,
             type: "spring",

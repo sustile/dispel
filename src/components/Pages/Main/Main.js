@@ -28,6 +28,7 @@ import {
 import Spinner from "../../UI/Spinner/Spinner";
 import Settings from "../../Main Content/Settings/Settings";
 import Notifications from "../../UI/Notifications/Notifications";
+import { AnimatePresence } from "framer-motion";
 
 function Main(props) {
   const dispatch = useDispatch();
@@ -123,16 +124,18 @@ function Main(props) {
       ) : (
         ""
       )}
-      {currentMainCont.value === "friendsCont" ? (
-        <Friends socket={socket} vcPeer={vcPeer} />
-      ) : (
-        ""
-      )}
-      {currentMainCont.value === "settingsCont" ? (
-        <Settings socket={socket} />
-      ) : (
-        ""
-      )}
+      <AnimatePresence>
+        {currentMainCont.value === "friendsCont" ? (
+          <Friends socket={socket} vcPeer={vcPeer} />
+        ) : (
+          ""
+        )}
+        {currentMainCont.value === "settingsCont" ? (
+          <Settings socket={socket} />
+        ) : (
+          ""
+        )}
+      </AnimatePresence>
       {vcPeer && (
         <GlobalEventHandlers
           socket={socket}

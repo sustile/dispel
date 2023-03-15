@@ -43,7 +43,7 @@
 .Nav_Left .userDetails_Details p {
   font-weight: 600;
   font-size: 1.2rem;
-  color: #ddd;
+  color: #f1faee;
   cursor: pointer;
 }
 .Nav_Right {
@@ -61,7 +61,7 @@
   letter-spacing: 2rem;
 }
 .Nav_Right p {
-  color: #ddd;
+  color: #f1faee;
   font-size: 1rem;
 }
 
@@ -129,7 +129,7 @@
   overflow: hidden;
 }
 .AccountCard .userProfileData p {
-  color: #ddd;
+  color: #f1faee;
   font-size: 1.3rem;
   font-weight: 800;
   width: 20rem;
@@ -156,14 +156,14 @@
   align-items: center;
 }
 .AccountCard .userProfileAboutMe .aboutMeCont span {
-  color: #ddd;
+  color: #f1faee;
   background-color: rgb(31, 31, 31);
   font-size: 1.5rem;
   padding: 0.5rem 2rem;
   border-radius: 5px;
 }
 .AccountCard .userProfileAboutMe p {
-  color: #ddd;
+  color: #f1faee;
   font-size: 1.5rem;
   line-height: 1.5;
   white-space: pre-line;

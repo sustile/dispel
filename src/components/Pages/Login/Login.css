@@ -32,7 +32,7 @@
   font-weight: 300;
 }
 .Register-wrapper .logoCont span {
-  color: #ddd;
+  color: #f1faee;
   font-size: 2rem;
   margin-left: 5.2rem;
   display: flex;
@@ -57,7 +57,7 @@
   padding: 1rem 3rem;
   border-radius: 1rem;
   background-color: var(--secondary-bg);
-  color: #ddd;
+  color: #f1faee;
   font-size: 2rem;
   font-family: "Roboto Mono", monospace;
 }
@@ -71,7 +71,7 @@
   font-family: "Roboto Mono", monospace;
   background-color: #333;
   cursor: not-allowed;
-  color: #ddd;
+  color: #f1faee;
   font-size: 2rem;
   font-weight: 500;
   transition: background-color, color 0.3s ease;
@@ -89,7 +89,7 @@
   margin-top: 4rem;
 }
 .Register-wrapper .RegisterContBtn span {
-  color: #ddd;
+  color: #f1faee;
   font-size: 2rem;
 }
 .Register-wrapper .RegisterContBtn button {

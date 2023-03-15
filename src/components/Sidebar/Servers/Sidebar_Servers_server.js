@@ -38,7 +38,7 @@ function Sidebar_Servers_server(props) {
     <motion.div className="Servers_Sidebar_MainCont_Server">
       <motion.img
         whileHover={{
-          scale: 1.2,
+          scale: 1.05,
           transition: {
             type: "spring",
             duration: 0.3,
@@ -46,7 +46,7 @@ function Sidebar_Servers_server(props) {
         }}
         onClick={ClickHandler}
         whileTap={{
-          scale: 0.9,
+          scale: 0.98,
           transition: {
             type: "spring",
             duration: 0.3,

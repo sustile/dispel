@@ -1,6 +1,6 @@
 .DirectMessages_Sidebar {
   &_Main {
-    background-color: #333;
+    background-color: #1d1d1d;
     width: 30rem;
     display: flex;
     flex-direction: column;
@@ -58,7 +58,6 @@
       border-radius: 1rem;
       padding: 0.5rem 2rem;
       cursor: pointer;
-      // background-color: rgb(39, 39, 39);
 
       .imageDiv {
         position: relative;
@@ -84,7 +83,7 @@
 
       p {
         font-family: "Roboto Mono", monospace;
-        color: #ddd;
+        color: #f1faee;
         font-size: 1.7rem;
         font-weight: 600;
         width: calc(100% - 8rem);

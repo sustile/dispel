@@ -22,13 +22,23 @@
       outline: 0;
       //   width: 80%;
       padding: 0.8rem 2rem;
-      border-radius: 1rem;
+      border-radius: 0.5rem;
       background-color: #333;
       font-family: "Roboto Mono", monospace;
-      font-size: 1.9rem;
+      font-size: 1.5rem;
       color: var(--primary-red);
       font-weight: 500;
       cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      i {
+        color: #f15bb5;
+        background-color: #333;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+      }
     }
 
     .active {
@@ -77,7 +87,7 @@
       position: relative;
 
       .NoData {
-        color: #ddd;
+        color: #f1faee;
         font-size: 2.5rem;
         font-weight: 400;
         text-align: center;
@@ -116,7 +126,7 @@
           }
 
           // p {
-          //   color: #ddd;
+          //   color: #f1faee;
           //   font-size: 1.8rem;
           //   font-weight: 500;
           // }
@@ -133,7 +143,7 @@
             }
 
             p {
-              color: #ddd;
+              color: #f1faee;
               font-size: 1.3rem;
               font-weight: 500;
             }
@@ -141,7 +151,7 @@
         }
 
         i {
-          color: #ddd;
+          color: #f1faee;
           font-size: 2.2rem;
           padding: 1.1rem;
           border-radius: 50%;
@@ -160,7 +170,7 @@
         width: 100%;
 
         .RequestType {
-          color: #ddd;
+          color: #f1faee;
           font-size: 1.8rem;
           font-weight: 500;
         }
@@ -196,7 +206,7 @@
               }
 
               p {
-                color: #ddd;
+                color: #f1faee;
                 font-size: 1.3rem;
                 font-weight: 500;
               }
@@ -204,7 +214,7 @@
           }
 
           i {
-            color: #ddd;
+            color: #f1faee;
             font-size: 2rem;
             padding: 1.1rem;
             border-radius: 50%;
@@ -259,7 +269,7 @@
           outline: 0;
           border: 0;
           background-color: #333;
-          color: #ddd;
+          color: #f1faee;
           font-family: "Roboto Mono", monospace;
           font-size: 2rem;
           padding: 1rem 3rem;
@@ -269,7 +279,7 @@
           position: relative;
 
           &::placeholder {
-            color: #ddd;
+            color: #f1faee;
           }
         }
       }

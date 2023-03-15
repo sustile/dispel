@@ -5,7 +5,13 @@ import "./DirectMessages.css";
 import DirectMessagesHeader from "./DirectMessagesHeader";
 import DirectMessages_Message from "./DirectMessages_Message";
 import Fuse from "fuse.js";
-import { dmMessagesAction, spinnerActions } from "./../../Store/store";
+import EmojiPicker from "emoji-picker-react";
+
+import {
+  dmMessagesAction,
+  spinnerActions,
+  notificationsAction,
+} from "./../../Store/store";
 import { useEffect } from "react";
 import axios from "axios";
 import DirectMessages_MessageMenu from "../../ContextMenus/DirectMessages_MessageMenu";
@@ -34,14 +40,22 @@ function DirectMessages(props) {
 
   let [showContextMenu, setShowContextMenu] = useState(false);
   let [inputFocus, setInputFocus] = useState(false);
-  let [showSubmit, setSubmit] = useState(false);
   let [fuzzyCurrent, setfuzzyCurrent] = useState(false);
   let [dmData, setDmData] = useState(false);
+  let [textBoxCount, setTextBoxCount] = useState(0);
+  let [emojiPicker, setEmojiPicker] = useState(false);
+  let [fileUploadshow, setfileUploadshow] = useState(false);
   let [reply, replyReducer] = useReducer(replyReducerFunction, {
     status: false,
     messageId: "",
     name: "",
     replyingTo: "",
+  });
+
+  let [dummyText, setDummyText] = useState({
+    status: false,
+    reply: false,
+    image: false,
   });
 
   let [pingRender, setPingRender] = useState([]);
@@ -75,6 +89,11 @@ function DirectMessages(props) {
     // console.log(inputRef.current.value.split("\n"));
 
     if (reply.status) {
+      setDummyText({
+        status: true,
+        reply: true,
+        image: false,
+      });
       let final = {
         message: inputRef.current.value.trim(),
         type: "reply",
@@ -113,8 +132,18 @@ function DirectMessages(props) {
             createdAt: data.obj.createdAt,
           })
         );
+        // setDummyText({
+        //   status: false,
+        //   reply: false,
+        //   image: false,
+        // });
       }
     } else {
+      setDummyText({
+        status: true,
+        reply: false,
+        image: false,
+      });
       let final = {
         message: inputRef.current.value.trim(),
         type: "normal",
@@ -147,10 +176,17 @@ function DirectMessages(props) {
             createdAt: data.obj.createdAt,
           })
         );
+
+        // setDummyText({
+        //   status: false,
+        //   reply: false,
+        //   image: false,
+        // });
       }
     }
 
     setfuzzyCurrent(false);
+    setTextBoxCount(0);
     setPingRender([]);
     inputRef.current.value = "";
     inputRef.current.style.height = "4.8rem";
@@ -335,6 +371,18 @@ function DirectMessages(props) {
                   socket={socket}
                 />
               );
+              // setToBeRendered((state) => [
+              //   ...state,
+              //   <DirectMessages_Message
+              //     key={el.objId}
+              //     data={{ ...el, message }}
+              //     showContextMenu={showContextMenu}
+              //     setShowContextMenu={setContextMenu}
+              //     setReply={setReply}
+              //     reply={y}
+              //     socket={socket}
+              //   />,
+              // ]);
             } else {
               final.push(
                 <DirectMessages_Message
@@ -347,6 +395,18 @@ function DirectMessages(props) {
                   socket={socket}
                 />
               );
+              // setToBeRendered((state) => [
+              //   ...state,
+              //   <DirectMessages_Message
+              //     key={el.objId}
+              //     data={el}
+              //     showContextMenu={showContextMenu}
+              //     setShowContextMenu={setContextMenu}
+              //     setReply={setReply}
+              //     reply={y}
+              //     socket={socket}
+              //   />,
+              // ]);
             }
           } else {
             if (el.type.includes("image")) {
@@ -364,6 +424,17 @@ function DirectMessages(props) {
                   socket={socket}
                 />
               );
+              // setToBeRendered((state) => [
+              //   ...state,
+              //   <DirectMessages_Message
+              //     key={el.objId}
+              //     data={{ ...el, message }}
+              //     showContextMenu={showContextMenu}
+              //     setShowContextMenu={setContextMenu}
+              //     setReply={setReply}
+              //     socket={socket}
+              //   />,
+              // ]);
             } else {
               final.push(
                 <DirectMessages_Message
@@ -375,6 +446,17 @@ function DirectMessages(props) {
                   socket={socket}
                 />
               );
+              // setToBeRendered((state) => [
+              //   ...state,
+              //   <DirectMessages_Message
+              //     key={el.objId}
+              //     data={el}
+              //     showContextMenu={showContextMenu}
+              //     setShowContextMenu={setContextMenu}
+              //     setReply={setReply}
+              //     socket={socket}
+              //   />,
+              // ]);
             }
           }
         }
@@ -383,6 +465,11 @@ function DirectMessages(props) {
           setNoData(true);
         }
 
+        setDummyText({
+          status: false,
+          reply: false,
+          image: false,
+        });
         dispatch(spinnerActions.toggleSpinner(false));
         setToBeRendered(final);
 
@@ -407,22 +494,21 @@ function DirectMessages(props) {
 
   function scrollHandler(e) {
     let main = e.target;
-    let scrollBtm = Math.floor(main.clientHeight - main.scrollTop);
+    if (spinnerState) return;
+    let scrollBtm = main.clientHeight - main.scrollTop;
     if (
-      scrollBtm + 1 === main.scrollHeight ||
-      scrollBtm - 1 === main.scrollHeight ||
-      scrollBtm === main.scrollHeight
+      scrollBtm === main.scrollHeight &&
+      main.scrollHeight !== main.clientHeight
     ) {
-      if (main.scrollHeight === main.clientHeight) return;
       setTimeout(async () => {
-        scrollBtm = Math.floor(main.clientHeight - main.scrollTop);
+        if (spinnerState) return;
+        scrollBtm = main.clientHeight - main.scrollTop;
         if (
-          scrollBtm + 1 === main.scrollHeight ||
-          scrollBtm - 1 === main.scrollHeight ||
-          scrollBtm === main.scrollHeight
+          scrollBtm === main.scrollHeight &&
+          main.scrollHeight !== main.clientHeight
         ) {
           if (currentDmData.isMaximum) return;
-
+          // console.log("trigerring render");
           dispatch(spinnerActions.toggleSpinner(true));
           let data = await getMessagesFromServer(
             currentCont.id,
@@ -486,7 +572,8 @@ function DirectMessages(props) {
   }
 
   async function fileHandler(e) {
-    let file = [...e.target.files];
+    // let file = [...e.target.files];
+    let file = e;
     file = file.filter((el) => {
       if (el.size / 1000000 <= 10) return el;
     });
@@ -502,6 +589,11 @@ function DirectMessages(props) {
         };
 
         if (reply.status) {
+          setDummyText({
+            status: true,
+            reply: true,
+            image: true,
+          });
           let final = {
             message: file,
             type: "reply-image",
@@ -542,8 +634,19 @@ function DirectMessages(props) {
                 createdAt: data.obj.createdAt,
               })
             );
+
+            // setDummyText({
+            //   status: false,
+            //   reply: false,
+            //   image: false,
+            // });
           }
         } else {
+          setDummyText({
+            status: true,
+            reply: false,
+            image: true,
+          });
           let final = {
             message: file,
             type: "normal-image",
@@ -578,6 +681,12 @@ function DirectMessages(props) {
                 createdAt: data.obj.createdAt,
               })
             );
+
+            // setDummyText({
+            //   status: false,
+            //   reply: false,
+            //   image: false,
+            // });
           }
         }
         setReply({
@@ -598,6 +707,11 @@ function DirectMessages(props) {
     })();
   }, [currentCont]);
 
+  // useEffect(() => {
+  //   setTextBoxCount(inputRef.current.value.length);
+  //   console.log(inputRef.current.value.length);
+  // }, [inputRef?.current?.value]);
+
   return (
     <div className="DirectMessages-Wrapper">
       <DirectMessagesHeader
@@ -611,6 +725,65 @@ function DirectMessages(props) {
       >
         <div className="DirectMessagesBody-MessageWrapper" ref={messageCont}>
           {toBeRendered}
+          {dummyText.status && (
+            <motion.div
+              className="DirectMessagesBody-Message"
+              // whileHover={{
+              //   backgroundColor: "rgb(24, 24, 24)",
+              //   transition: {
+              //     duration: 0.3,
+              //     type: "spring",
+              //   },
+              // }}
+              // initial={{ opacity: 0 }}
+              // animate={{
+              //   opacity: 1,
+              //   transition: {
+              //     duration: 0.3,
+              //   },
+              // }}
+            >
+              {dummyText.reply && (
+                <div className="DirectMessages-reply-Cont">
+                  <i class="ph-arrow-elbow-left-down-bold"></i>
+                  <div className="dummyImg"></div>
+                  <div className="dummyMessage"></div>
+                </div>
+              )}
+              <div className="DirectMessagesBody-Message-masterCont">
+                <img
+                  src={`/Images/${userData.image}`}
+                  className="profileTrigger profileImage"
+                />
+                <div className="DirectMessagesBody-Message_Body">
+                  <div className="DirectMessagesBody-Message_Body-details">
+                    <h2 className="profileTrigger" style={{ color: "#84a59d" }}>
+                      {userData.name}
+                    </h2>
+                    <div className="dummyDate"></div>
+                  </div>
+                  {!dummyText.image && (
+                    <React.Fragment>
+                      <div
+                        className="dummyMessage"
+                        style={{ width: `${Math.random() * 100}%` }}
+                      ></div>
+                      <div
+                        className="dummyMessage"
+                        style={{ width: `${Math.random() * 100}%` }}
+                      ></div>
+                      {/* <div
+                        className="dummyMessage"
+                        style={{ width: `${Math.random() * 100}%` }}
+                      ></div> */}
+                    </React.Fragment>
+                  )}
+                  {dummyText.image && <div className="dummyImage"></div>}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* <DirectMessages_Message
             key="ASDSADASDSA"
             data={{
@@ -753,30 +926,215 @@ function DirectMessages(props) {
                   ></i>
                 </div>
               )}
-              <div className="inputCont">
-                {/* <input
-                  type="text"
-                  placeholder={`Send a Message to ${props.data.name}`}
-                  maxLength="200"
-                  minLength="1"
-                  ref={inputRef}
-                  // onChange={(e) => {
-                  //   if (e.target.value.trim() !== "") {
-                  //     if (showSubmit) return;
-                  //     setSubmit(true);
-                  //   } else {
-                  //     setSubmit(false);
-                  //   }
-                  // }}
-                  onFocus={() => setInputFocus(true)}
-                  onBlur={() => setInputFocus(false)}
-                /> */}
 
+              <motion.div
+                className="inputCont"
+                onDragEnter={() => {
+                  setfileUploadshow(true);
+                }}
+                onDragLeave={() => {
+                  setfileUploadshow(false);
+                }}
+              >
+                <AnimatePresence initial={false}>
+                  {fileUploadshow && (
+                    <motion.div
+                      className="fileUpload"
+                      initial={{
+                        opacity: 0,
+                        scale: 0.95,
+                        translateX: "-50%",
+                        translateY: "-50%",
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        translateY: "-200%",
+                        transition: {
+                          duration: 0.3,
+                          type: "spring",
+                        },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.95,
+                        translateY: "-50%",
+                        transition: {
+                          duration: 0.3,
+                          type: "spring",
+                        },
+                      }}
+                    >
+                      <span>Upload File</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <div
+                  className={`textboxIcons ${
+                    inputFocus ||
+                    (inputRef.current && inputRef.current.value !== "")
+                      ? "textboxIcons_focus"
+                      : ""
+                  }`}
+                >
+                  {textBoxCount !== 0 && (
+                    <span
+                      className={`numberCount ${
+                        textBoxCount >= 100 && textBoxCount < 200
+                          ? "numberCountMid"
+                          : ""
+                      } ${textBoxCount === 200 ? "numberCountMax" : ""}`}
+                    >
+                      {textBoxCount}/200
+                    </span>
+                  )}
+
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    id="fileInput"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => {
+                      let final = [...e.target.files].filter((el) => {
+                        if (el.type.includes("image/")) {
+                          if (el.size / 1000000 <= 10) {
+                            return el;
+                          } else {
+                            dispatch(
+                              notificationsAction.setNotification({
+                                type: "error",
+                                message: "Image Size Exceeds 10MB",
+                              })
+                            );
+                          }
+                        }
+                      });
+
+                      if (final.length > 0) {
+                        fileHandler(final);
+                      } else {
+                        dispatch(
+                          notificationsAction.setNotification({
+                            type: "error",
+                            message: "File Type(s) Invalid",
+                          })
+                        );
+                      }
+                    }}
+                  />
+                  <label htmlFor="fileInput">
+                    <motion.i
+                      initial={{
+                        scale: 1,
+                      }}
+                      whileHover={{
+                        scale: 1.1,
+                        transition: {
+                          duration: 0.3,
+                          type: "spring",
+                        },
+                      }}
+                      whileTap={{
+                        scale: 1,
+                        transition: {
+                          duration: 0.3,
+                          type: "spring",
+                        },
+                      }}
+                      class="ph ph-paperclip imageBtn"
+                    ></motion.i>
+                  </label>
+
+                  <AnimatePresence>
+                    {emojiPicker && (
+                      <EmojiPicker
+                        onEmojiClick={(e) => {
+                          inputRef.current.setRangeText(
+                            e.emoji,
+                            inputRef.current.value.length,
+                            inputRef.current.value.length
+                          );
+                        }}
+                      />
+                    )}
+                  </AnimatePresence>
+
+                  <motion.i
+                    initial={{
+                      scale: 1,
+                    }}
+                    whileHover={{
+                      scale: 1.1,
+                      transition: {
+                        duration: 0.3,
+                        type: "spring",
+                      },
+                    }}
+                    whileTap={{
+                      scale: 1,
+                      transition: {
+                        duration: 0.3,
+                        type: "spring",
+                      },
+                    }}
+                    onClick={() => setEmojiPicker((state) => !state)}
+                    class={`ph ${
+                      emojiPicker ? "ph-x-bold" : "ph-smiley"
+                    } emojiBtn`}
+                  ></motion.i>
+                </div>
                 <textarea
                   placeholder={`Send a Message to ${props.data.name}`}
                   maxLength="200"
                   minLength="1"
                   ref={inputRef}
+                  onChange={(e) => setTextBoxCount(e.target.value.length)}
+                  onDrop={async (e) => {
+                    e.preventDefault();
+                    setfileUploadshow(false);
+
+                    if (e.dataTransfer.items) {
+                      let final = [];
+
+                      for (let item of e.dataTransfer.items) {
+                        if (
+                          item.kind === "file" &&
+                          item.type.includes("image/")
+                        ) {
+                          const file = item.getAsFile();
+                          if (file.size / 1000000 <= 10) {
+                            final.push(file);
+                          } else {
+                            dispatch(
+                              notificationsAction.setNotification({
+                                type: "error",
+                                message: "Image Size Exceeds 10MB",
+                              })
+                            );
+                          }
+                        }
+                      }
+
+                      if (final.length > 0) {
+                        fileHandler(final);
+                      } else {
+                        dispatch(
+                          notificationsAction.setNotification({
+                            type: "error",
+                            message: "File Type(s) Invalid",
+                          })
+                        );
+                      }
+                    } else {
+                      dispatch(
+                        notificationsAction.setNotification({
+                          type: "error",
+                          message: "Only Images can be Uploaded",
+                        })
+                      );
+                    }
+                  }}
                   onInput={async (e) => {
                     if (
                       e.nativeEvent.data === "@" ||
@@ -853,81 +1211,8 @@ function DirectMessages(props) {
                   onFocus={() => setInputFocus(true)}
                   onBlur={() => setInputFocus(false)}
                 />
-              </div>
+              </motion.div>
             </div>
-            {/* <AnimatePresence>
-              {showSubmit && (
-                <motion.button
-                  type="submit"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: 1,
-                    transition: {
-                      duration: 0.2,
-                      type: "spring",
-                    },
-                  }}
-                  exit={{
-                    opacity: 0,
-                    transition: {
-                      duration: 0.2,
-                      type: "spring",
-                    },
-                  }}
-                >
-                  <motion.i
-                    initial={{
-                      scale: 1,
-                    }}
-                    whileHover={{
-                      scale: 1.1,
-                      transition: {
-                        duration: 0.3,
-                        type: "spring",
-                      },
-                    }}
-                    whileTap={{
-                      scale: 1,
-                      transition: {
-                        duration: 0.3,
-                        type: "spring",
-                      },
-                    }}
-                    className="ph-paper-plane-right-bold submitBtn"
-                  ></motion.i>
-                </motion.button>
-              )}
-            </AnimatePresence> */}
-            <input
-              type="file"
-              style={{ display: "none" }}
-              id="fileInput"
-              accept="image/*"
-              multiple
-              onChange={fileHandler}
-            />
-            <label htmlFor="fileInput" className="imageLabel">
-              <motion.i
-                initial={{
-                  scale: 1,
-                }}
-                whileHover={{
-                  scale: 1.1,
-                  transition: {
-                    duration: 0.3,
-                    type: "spring",
-                  },
-                }}
-                whileTap={{
-                  scale: 1,
-                  transition: {
-                    duration: 0.3,
-                    type: "spring",
-                  },
-                }}
-                class="ph-image-square-bold imageBtn"
-              ></motion.i>
-            </label>
           </div>
         </form>
       </div>

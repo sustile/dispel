@@ -22,14 +22,14 @@ function Deafen() {
       }
       onClick={deafenHandler}
       whileHover={{
-        scale: 1.2,
+        scale: 1.1,
         transition: {
           duration: 0.5,
           type: "spring",
         },
       }}
       whileTap={{
-        scale: 0.9,
+        scale: 0.98,
         transition: {
           duration: 0.3,
           type: "spring",

@@ -18,26 +18,52 @@ function Sidebar({ vcPeer }) {
 
   return (
     <div className="Sidebar">
-      <motion.i
-        className="ph-chat-teardrop-text-bold Sidebar_ToggleBtn"
-        onClick={toggleSidebar}
-        whileHover={{
-          scale: 1.3,
-          transition: {
-            duration: 0.5,
-            type: "spring",
-          },
-        }}
-        whileTap={{
-          scale: 0.9,
-          transition: {
-            duration: 0.3,
-            type: "spring",
-            damping: 25,
-            stiffness: 500,
-          },
-        }}
-      ></motion.i>
+      <AnimatePresence initial={false}>
+        {!sidebarIsOpen && (
+          <motion.i
+            className="ph-chat-teardrop-text-bold Sidebar_ToggleBtn"
+            onClick={toggleSidebar}
+            initial={{
+              scale: 0.5,
+            }}
+            animate={{
+              scale: 1,
+              transition: {
+                duration: 0.3,
+                type: "spring",
+                damping: 25,
+                stiffness: 500,
+              },
+            }}
+            exit={{
+              scale: 0.5,
+              transition: {
+                duration: 0.3,
+                type: "spring",
+                damping: 25,
+                stiffness: 500,
+              },
+            }}
+            whileHover={{
+              scale: 1.1,
+              transition: {
+                duration: 0.5,
+                type: "spring",
+              },
+            }}
+            whileTap={{
+              scale: 0.98,
+              transition: {
+                duration: 0.3,
+                type: "spring",
+                damping: 25,
+                stiffness: 500,
+              },
+            }}
+          ></motion.i>
+        )}
+        {sidebarIsOpen && <div className="dummyPlaceholder"></div>}
+      </AnimatePresence>
 
       <AnimatePresence initial={false} exitBeforeEnter={true}>
         {sidebarIsOpen && (
@@ -52,14 +78,14 @@ function Sidebar({ vcPeer }) {
               },
             }}
             whileHover={{
-              scale: 1.3,
+              scale: 1.1,
               transition: {
                 duration: 0.5,
                 type: "spring",
               },
             }}
             whileTap={{
-              scale: 0.9,
+              scale: 0.98,
               transition: {
                 duration: 0.3,
                 type: "spring",

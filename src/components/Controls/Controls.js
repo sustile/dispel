@@ -26,7 +26,7 @@ function Controls() {
             : "ph-users-four-bold friendsTrigger"
         }
         whileHover={{
-          scale: 1.2,
+          scale: 1.05,
           transition: {
             duration: 0.3,
             type: "spring",
@@ -44,7 +44,7 @@ function Controls() {
           }
         }}
         whileTap={{
-          scale: 0.9,
+          scale: 0.98,
           transition: {
             duration: 0.3,
             type: "spring",

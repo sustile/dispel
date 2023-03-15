@@ -48,8 +48,8 @@ function Sidebar_DirectMessages_User(props) {
   return (
     <motion.div
       whileHover={{
-        scale: 1.1,
-        backgroundColor: "rgb(39, 39, 39)",
+        scale: 1.05,
+        backgroundColor: "rgb(34, 34, 34)",
         transition: {
           type: "spring",
           duration: 0.3,
@@ -57,7 +57,7 @@ function Sidebar_DirectMessages_User(props) {
       }}
       onClick={ClickHandler}
       whileTap={{
-        scale: 0.9,
+        scale: 0.98,
         transition: {
           type: "spring",
           duration: 0.3,
